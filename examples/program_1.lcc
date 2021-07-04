@@ -1,0 +1,25 @@
+-- Exemplo 1
+-- Algoritmo:
+{
+-- triangle area code example:
+{
+  -- defining variables
+  float height;
+  float width;
+  float triangle_area;
+
+  -- initialazing values
+  height = 10;
+  width = 7;
+
+  -- calculating triangle area
+  triangle_area = (height * width)/2;
+  print triangle_area
+}
+
+-- student grades code example:
+{
+  string student_name;
+  float[] student;
+}
+}

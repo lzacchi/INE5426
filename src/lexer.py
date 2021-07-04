@@ -3,10 +3,10 @@
 # Lua language (https://www.lua.org/)
 
 import ply.lex as lex
-from lex import LexToken
+from ply.lex import LexToken
 
 
-class Lexer:
+class Lexer(object):
     reserved = {
         "def": "DEF",
         "int": "INTEGER",
@@ -49,10 +49,10 @@ class Lexer:
         "NULL",
         "COMMENT",
         "ATTRIBUTION",
+        "STRING_CONSTANT",
         "LABEL",  # 'ident'
         "FLOATING_POINT_CONSTANT",
         "INTEGER_CONSTANT",
-        "STRING_CONSTANT",
     ]
 
     # Tokens regular expression
@@ -78,10 +78,11 @@ class Lexer:
     t_LEFT_SQUARE_BRACKET = r"\["
     t_RIGHT_SQUARE_BRACKET = r"\]"
 
-    t_ignore_COMMENT = r"--"  # updated
+    t_ignore_COMMENT = r"--.*"  # updated
     t_ignore = " \t"  # updated
     t_NULL = r"nil"  # updated
     t_ATTRIBUTION = r"="
+    t_STRING_CONSTANT = r'".*"'
 
     def t_LABEL(self, t: LexToken) -> LexToken:
         r"[a-zA-Z][A-Za-z0-9]*"
@@ -99,9 +100,11 @@ class Lexer:
         return t
 
     # Define a rule so we can track line numbers
-    def t_newline(t: LexToken) -> LexToken:
+    def t_newline(self, t: LexToken) -> LexToken:
         r"\n+"
         t.lexer.lineno += len(t.value)
+
+    # ---
 
     # Compute column
     # token is a token instance
@@ -112,15 +115,25 @@ class Lexer:
         # return (token.lexpos - line_start) + 1
 
     # Error handling rule
-    def t_error(t):
+    def t_error(self, t: LexToken) -> None:
         print("Illegal character '%s'" % t.value[0])
         t.lexer.skip(1)
 
-    def build(self, **kwargs):
-        self.lexer = lex.lex(object=self, **kwargs)
+    def build(self, **kwargs: dict) -> None:
+        self.lexer = lex.lex(module=self, **kwargs)
 
+    def input(self, src: str, **kwargs: int) -> None:
+        self.src = src
+        self.lexer.input(src)
 
-    def input()
+    # Test it output
+    def test(self, data: str) -> None:
+        self.lexer.input(data)
+        while True:
+            tok = self.lexer.token()
+            if not tok:
+                break
+            print(tok)
 
     def token(self) -> LexToken:
         return self.lexer.token()

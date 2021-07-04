@@ -1,1 +1,9 @@
-# todo
+-- Exemplo 1
+-- Algoritmo:
+{
+{
+  float height;
+  float width;
+  float area;
+}
+}

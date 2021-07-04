@@ -7,8 +7,4 @@
     ],
     "python.formatting.provider": "black",
     "editor.formatOnSave": true,
-    "python.analysis.typeCheckingMode": "basic",
-    "[python]": {
-        "editor.wordBasedSuggestions": false
-    }
 }
