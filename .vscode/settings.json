@@ -6,5 +6,9 @@
         "--disallow-untyped-defs"
     ],
     "python.formatting.provider": "black",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "[python]": {
+        "editor.wordBasedSuggestions": false
+    }
 }

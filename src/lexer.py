@@ -2,7 +2,8 @@
 # has been modified to mirror operators used in the
 # Lua language (https://www.lua.org/)
 
-from ply import LexToken
+import ply.lex as lex
+from lex import LexToken
 
 
 class Lexer:
@@ -106,5 +107,20 @@ class Lexer:
     # token is a token instance
     def find_column(self, token: LexToken) -> LexToken:
         pass
+        # TODO
         # line_start = self._input.rfind("\n", 0, token.lexpos) + 1
         # return (token.lexpos - line_start) + 1
+
+    # Error handling rule
+    def t_error(t):
+        print("Illegal character '%s'" % t.value[0])
+        t.lexer.skip(1)
+
+    def build(self, **kwargs):
+        self.lexer = lex.lex(object=self, **kwargs)
+
+
+    def input()
+
+    def token(self) -> LexToken:
+        return self.lexer.token()
