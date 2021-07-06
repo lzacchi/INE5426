@@ -5,6 +5,7 @@
 import ply.lex as lex
 from ply.lex import LexToken
 from typing import List
+from output import InvalidTokenError
 
 
 class Lexer(object):
@@ -100,25 +101,23 @@ class Lexer(object):
         t.value = int(t.value)
         return t
 
-    # Define a rule so we can track line numbers
     def t_newline(self, t: LexToken) -> LexToken:
         r"\n+"
         t.lexer.lineno += len(t.value)
 
     # ---
 
-    # Compute column
-    # token is a token instance
-    def find_column(self, token: LexToken) -> LexToken:
-        pass
-        # TODO
-        # line_start = self._input.rfind("\n", 0, token.lexpos) + 1
-        # return (token.lexpos - line_start) + 1
+    def find_column(self, t: LexToken) -> int:
+        line_start = self.src.rfind("\n", 0, t.lexpos) + 1
+        return (t.lexpos - line_start) + 1
 
-    # Error handling rule
     def t_error(self, t: LexToken) -> None:
-        print("Illegal character '%s'" % t.value[0])
+        # Simulating a Lua error message
+        print(
+            f"Input file({t.lineno}:{self.find_column(t)}) '{t.value[0]}' is an invalid character"
+        )
         t.lexer.skip(1)
+        raise InvalidTokenError()
 
     def build(self, **kwargs: dict) -> None:
         self.lexer = lex.lex(module=self, **kwargs)

@@ -3,7 +3,7 @@ import sys
 from lexer import Lexer
 from ply.lex import LexToken
 from typing import List
-from output import print_tokens, print_symbol_table
+from output import print_tokens, print_symbol_table, InvalidTokenError
 
 
 def main(src: str) -> None:
@@ -14,7 +14,11 @@ def main(src: str) -> None:
     lexer.build()
     lexer.input(src)
 
-    tokens = lexer.token_list()
+    try:
+        tokens = lexer.token_list()
+    except InvalidTokenError as err:
+        sys.exit(-1)
+
     print_tokens(tokens)
     print_symbol_table(tokens)
 
