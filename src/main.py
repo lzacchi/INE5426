@@ -18,5 +18,8 @@ def main(src: str) -> None:
 
 
 if __name__ == "__main__":
-    src = sys.argv[1]
-    main(src)
+    if len(sys.argv) != 2:
+        print("Usage: python main.py <path/to/source-code>")
+    else:
+        src = sys.argv[1]
+        main(src)
