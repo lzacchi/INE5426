@@ -4,6 +4,7 @@
 
 import ply.lex as lex
 from ply.lex import LexToken
+from typing import List
 
 
 class Lexer(object):
@@ -126,14 +127,11 @@ class Lexer(object):
         self.src = src
         self.lexer.input(src)
 
-    # Test it output
-    def test(self, data: str) -> None:
-        self.lexer.input(data)
+    def token_list(self) -> List:
+        result: List = []
         while True:
-            tok = self.lexer.token()
-            if not tok:
+            token = self.lexer.token()
+            if not token:
                 break
-            print(tok)
-
-    def token(self) -> LexToken:
-        return self.lexer.token()
+            result.append(token)
+        return result
