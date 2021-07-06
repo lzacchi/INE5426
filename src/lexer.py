@@ -87,7 +87,7 @@ class Lexer(object):
     t_STRING_CONSTANT = r'".*"'
 
     def t_LABEL(self, t: LexToken) -> LexToken:
-        r"[a-zA-Z][A-Za-z0-9]*"
+        r"[a-zA-Z][A-Za-z0-9_]*"
         t.type = self.reserved.get(t.value, "LABEL")
         return t
 
