@@ -92,7 +92,7 @@ class Lexer(object):
         return t
 
     def t_FLOATING_POINT_CONSTANT(self, t: LexToken) -> LexToken:
-        r"\d+\.d+"
+        r"\d+\.\d+"
         t.value = float(t.value)
         return t
 
