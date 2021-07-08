@@ -37,7 +37,7 @@ class Lexer(object):
         "MINUS",
         "TIMES",
         "DIVISION",
-        "MODULUS",
+        "MODULO",
         # limits
         "COMMA",
         "SEMICOLON",
@@ -69,7 +69,7 @@ class Lexer(object):
     t_MINUS = r"-"
     t_TIMES = r"\*"
     t_DIVISION = r"\/"
-    t_MODULUS = r"%"
+    t_MODULO = r"%"
 
     t_COMMA = r","
     t_SEMICOLON = r";"
