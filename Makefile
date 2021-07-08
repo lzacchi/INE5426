@@ -6,7 +6,7 @@ CCYELLOW=\033[0;33m
 CCRED=\033[0;31m
 CCEND=\033[0m
 
-src=examples/tests/success.lua
+src=source-code/success.lua
 
 
 install-poetry:

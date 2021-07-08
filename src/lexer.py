@@ -10,7 +10,7 @@ from output import InvalidTokenError
 
 class Lexer(object):
     reserved = {
-        "def": "DEF",
+        "def": "FUNCTION_DECLARATION",
         "int": "INTEGER",
         "float": "FLOATING_POINT",
         "string": "STRING",
