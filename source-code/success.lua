@@ -1,0 +1,2 @@
+-- Success case
+print("aa")
