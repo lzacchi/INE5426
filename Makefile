@@ -11,7 +11,7 @@ src=source-code/success.lua
 
 install-poetry:
 	@echo -e "${CCGREEN}Installing Poetry...${CCEND}"
-	@pip3 install --user poetry
+	@curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 	@echo -e "${CCGREEN}Done!${CCEND}"
 install:
 	@echo -e "${CCGREEN}Installing dependencies through Poetry...${CCEND}"
@@ -24,3 +24,8 @@ run:
 	@echo -e "An example file will be used"
 	@echo -e "You can change that by executing ${CCYELLOW}make run src=<path/to/file>${CCEND}"
 	@poetry run python src/main.py ${src}
+
+clean:
+	@echo -e "${CCRED}Uninstalling Poetry...${CCEND}"
+	@python3 get-poetry.py --uninstall
+	@echo -e "${CCGREEN}Done!${CCEND}"
