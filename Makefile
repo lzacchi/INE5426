@@ -27,5 +27,5 @@ run:
 
 clean:
 	@echo -e "${CCRED}Uninstalling Poetry...${CCEND}"
-	@python3 get-poetry.py --uninstall
+	@POETRY_UNINSTALL=1 bash -c 'curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python'
 	@echo -e "${CCGREEN}Done!${CCEND}"
