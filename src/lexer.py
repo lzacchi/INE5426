@@ -10,7 +10,7 @@ from output import InvalidTokenError
 
 class Lexer(object):
     reserved = {
-        "def": "DEF",
+        "def": "FUNCTION_DECLARATION",
         "int": "INTEGER",
         "float": "FLOATING_POINT",
         "string": "STRING",
@@ -37,7 +37,7 @@ class Lexer(object):
         "MINUS",
         "TIMES",
         "DIVISION",
-        "MODULUS",
+        "MODULO",
         # limits
         "COMMA",
         "SEMICOLON",
@@ -69,7 +69,7 @@ class Lexer(object):
     t_MINUS = r"-"
     t_TIMES = r"\*"
     t_DIVISION = r"\/"
-    t_MODULUS = r"%"
+    t_MODULO = r"%"
 
     t_COMMA = r","
     t_SEMICOLON = r";"
@@ -92,7 +92,7 @@ class Lexer(object):
         return t
 
     def t_FLOATING_POINT_CONSTANT(self, t: LexToken) -> LexToken:
-        r"\d+\.d+"
+        r"\d+\.\d+"
         t.value = float(t.value)
         return t
 
