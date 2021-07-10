@@ -48,7 +48,7 @@ run:
 
 
 .PHONY:
-run_example:
+example:
 	@echo -e "${GREEN}Executing main lexer.py...${CCEND}"
 	@echo -e "If you didn't specify a source program"
 	@echo -e "An example file will be used"
