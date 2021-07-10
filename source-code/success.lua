@@ -1,3 +1,11 @@
+--
+-- success.lua
+--
+-- Authors: Artur Barichello
+--          Lucas Verdade
+--          Lucas Zacchi
+--
+
 -- Success case
 
 def print_end() {

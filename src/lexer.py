@@ -1,3 +1,13 @@
+#
+# lexer.py
+#
+# Authors: Artur Barichello
+#          Lucas Verdade
+#          Lucas Zacchi
+#
+#
+
+
 # Comments with 'updated' indicate where the grammar
 # has been modified to mirror operators used in the
 # Lua language (https://www.lua.org/)

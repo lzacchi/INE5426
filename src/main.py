@@ -1,3 +1,12 @@
+#
+# main.py
+#
+# Authors: Artur Barichello
+#          Lucas Verdade
+#          Lucas Zacchi
+#
+#
+
 import sys
 
 from lexer import Lexer

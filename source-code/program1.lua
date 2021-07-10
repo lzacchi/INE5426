@@ -1,3 +1,11 @@
+--
+-- program1.lua
+--
+-- Authors: Artur Barichello
+--          Lucas Verdade
+--          Lucas Zacchi
+--
+
 -- Exemplo 1
 -- Algoritmo: Declarar e inicializar os alunos de uma turma.
 --            Gerar as notas dos testes pra cada um e calcular a média.

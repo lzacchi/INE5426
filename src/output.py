@@ -1,3 +1,12 @@
+#
+# output.py
+#
+# Authors: Artur Barichello
+#          Lucas Verdade
+#          Lucas Zacchi
+#
+#
+
 from ply.lex import LexToken
 from typing import List
 from pprint import pprint
