@@ -1,5 +1,8 @@
 # INE5426
 
+## Documentation
+All the project's documentation (such as assignments and reports) is located inside pdf/.
+
 ## Requirements
 
 This project uses [Poetry](https://python-poetry.org/) to handle its dependencies. If you don't have Poetry installed, you can do so following these [instructions](https://python-poetry.org/docs/#installation)
