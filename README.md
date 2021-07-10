@@ -13,7 +13,7 @@ Or you can execute each step individually:
 - Run `make install-poetry` to install Poetry;
 - Run `make install` to use Poetry to install the project's dependencies;
 - Run `make run` to execute all 3 example programs. After the execution, the results will be stored inside the `output/` folder;
-- Run `make run_example src=<path/to/source_code` to execute the lexical analyzer on the source code provided. If you don't specify a src, the file used will be `examples/tests/success.lua`;
+- Run `make example src=<path/to/source_code` to execute the lexical analyzer on the source code provided. If you don't specify a src, the file used will be `examples/tests/success.lua`;
 - To remove all files from the output/ folder, run `make clean`;
 - To uninstall Poetry, run `make uninstall`.
 
