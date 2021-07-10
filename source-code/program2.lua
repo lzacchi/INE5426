@@ -1,5 +1,9 @@
--- Exemplo 2
--- Algoritmo: 
+--
+-- program2.lua
+--
+-- Authors: Artur Barichello
+--          Lucas Verdade
+--          Lucas Zacchi
 
 int max_length;
 max_length = 5;
@@ -130,3 +134,31 @@ def delete_product(string name){
     }
     return;
 }
+
+-- main
+--  add 5 products
+--  try to add one more
+--  remove something
+--  update something else
+def main(){
+    -- Adding 5 products
+    add_product("programming in lua, book", "This book is a detailed and authoritative introduction to all aspects of Lua programming written by Lua's chief architect. ", 156.0);
+    add_product("laptop", "laptop lenovo ideapad s145", 2500.0);
+    add_product("echo dot third gen", "Amazon voice-controlled smart speaker that uses an artificially intelligent personal assistant", 250.0);
+    add_product("guitar", "giannini acoustic guitar 6 strings",1000.0);
+    add_product("moto g","Motorola Moto G with cracked screen", 800.0);
+
+    -- Trying to add
+    add_product("overflow", "Overflow test, this should not be added", 1.0);
+
+    -- Free some space
+    delete_product("laptop");
+
+    -- Update product
+    update_product("guitar", "acoustic guitar", "giannini acoustic guitar 6 strings", 1200.0);
+
+    return;
+}
+
+-- run
+main();
