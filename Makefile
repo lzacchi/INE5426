@@ -59,7 +59,7 @@ example:
 .PHONY:
 clean:
 	@echo -e "${CCRED}Cleaning output directory${CCEND}"
-	@rm -r output/*
+	@rm -r  -f output/*
 
 
 .PHONY:
