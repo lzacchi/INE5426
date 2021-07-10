@@ -2,7 +2,7 @@
 
 ## Requirements
 
-This project uses [Poetry](https://python-poetry.org/) to handle its dependencies. IF you don't have Poetry installed, you can do so following these [instructions](https://python-poetry.org/docs/#installation)
+This project uses [Poetry](https://python-poetry.org/) to handle its dependencies. If you don't have Poetry installed, you can do so following these [instructions](https://python-poetry.org/docs/#installation)
 
 Otherwise, if you have `curl`, this project's Makefile provides a method of installing Poetry through `curl`, as instructed in the official documentations. To do that, run the command `make install-poetry`
 
