@@ -19,34 +19,47 @@ product_price = new float[max_length];
 
 -- auxiliar function that put a empty slot on {index} position
 def erase_index(int index){
-    if (index >= max_length && index < 0){
-        print("[ERROR] Invalid product index! Index should be between 0 and "+ string(max_length));
+    if (index >= max_length){
+        if (index < 0){
+            print("[ERROR] Invalid product index! Index should be between 0 and "+ string(max_length));
+        } else {
+            product_name[index] = "empty";
+            product_description[index] = "empty";
+            product_price[index] = -1.0;
+            print("[LOG] Position "+index+" erased.");
+        }
     } else {
         product_name[index] = "empty";
         product_description[index] = "empty";
         product_price[index] = -1.0;
         print("[LOG] Position "+index+" erased.");
     }
+    
     return;
 }
 
 -- initalizing empty slots
 int j;
-for (j=0; j < max_length; j++){
+for (j=0; j < max_length; j = j + 1){
     erase_index(j);
 }
 
 -- print all informations about the product in index position
 -- if index is not a valid position then print error
 def product_info(int p_index){
-    if (p_index >= 0 && p_index < max_length){
-        print("Product: "+ string(p_index));
-        print("Name: " + product_name[p_index]);
-        print("Description: " + product_description[p_index]);
-        print("Price: $" + string(product_price[p_index]));
+    if (p_index >= 0){
+        if (p_index < max_length){
+            print("Product: "+ string(p_index));
+            print("Name: " + product_name[p_index]);
+            print("Description: " + product_description[p_index]);
+            print("Price: $" + string(product_price[p_index]));
+        } else {
+            print("[ERROR] Invalid product index! Index should be between 0 and "+ string(max_length));
+        }
     } else {
         print("[ERROR] Invalid product index! Index should be between 0 and "+ string(max_length));
     }
+        
     return;
 }
 
@@ -57,7 +70,7 @@ def add_product(string name, string description, float price){
     empty_slot = -1;
 
     -- searching for slot
-    for (i = 0; i < max_length; i++){
+    for (i = 0; i < max_length; i = i + 1){
         if (product_name[i] == "empty"){
             print("Empty slot found");
             empty_slot = i;
@@ -85,7 +98,7 @@ def update_product(string name, string new_name, float new_price, string new_des
     product_index = -1;
     
     print("[LOG] Searching for product which name is: '"+ name + "' ...");
-    for (i = 0; i < max_length; i++){
+    for (i = 0; i < max_length; i = i + 1){
         if (product_name[i] == name){
             print("Product:" + name + " found in position "+ i);
             product_index = i;
@@ -117,7 +130,7 @@ def delete_product(string name){
     product_index = -1;
     
     print("[LOG] Searching for product which name is: '"+ name + "' ...");
-    for (i = 0; i < max_length; i++){
+    for (i = 0; i < max_length; i = i + 1){
         if (product_name[i] == name){
             print("Product:" + name + " found in position "+ i);
             product_index = i;

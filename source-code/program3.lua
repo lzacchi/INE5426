@@ -27,8 +27,8 @@ def initialize_theater_system(int n_seats, string name){
     -- initalize seats
     int i;
     int j;
-    for (i=0; i<max_seats;i++){
-        for (j=0; j<max_seats;j++){
+    for (i=0; i<max_seats;i = i + 1){
+        for (j=0; j<max_seats;j = j + 1){
             reserved_seats[i][j] = "free";
         }
     }
@@ -46,27 +46,35 @@ def theater_status(){
 
 def suggest_another_seat(int i, int j){
     -- clear suggestion list
-    for (k=0; k < 4; k++){
+    for (k=0; k < 4; k = k + 1){
         suggestion_list[k] = "";
     }
 
     -- searching for nearby free seats
-    if (i+1 < max_seats && reserved_seats[i+1][j] == "free"){
+    if (i+1 < max_seats){
+        if (reserved_seats[i+1][j] == "free"){
         suggestion_list[0] = i +","+j;
+        }
     }
-    if (j+1 < max_seats && reserved_seats[i][j+1] == "free"){
+    if (j+1 < max_seats){
+        if (reserved_seats[i][j+1] == "free"){
         suggestion_list[1] = i +","+j;
+        }
     }
-    if (i-1 >= 0 && reserved_seats[i-1][j] == "free"){
+    if (i-1 >= 0){
+        if (reserved_seats[i-1][j] == "free"){
         suggestion_list[2] = i +","+j;
+        }
     }
-    if (j-1 >= 0 && reserved_seats[i][j-1] == "free"){
+    if (j-1 >= 0){
+        if (reserved_seats[i][j-1] == "free"){
         suggestion_list[3] = i +","+j;
+        }
     }
     
     int k;
     print("Here are some free seats suggestions near from that one:")
-    for (k=0; k < 4; k++){
+    for (k=0; k < 4; k = k + 1){
         print(suggestion_list[k]);
     }
     return;
