@@ -4,9 +4,6 @@
 # Authors: Artur Barichello
 #          Lucas Verdade
 #          Lucas Zacchi
-#
-#
-
 
 # Comments with 'updated' indicate where the grammar
 # has been modified to mirror operators used in the
@@ -17,55 +14,58 @@ from ply.lex import LexToken
 from typing import List
 from output import InvalidTokenError
 
+RESERVED = {
+    "def": "FUNCTION_DECLARATION",
+    "int": "INTEGER",
+    "float": "FLOATING_POINT",
+    "string": "STRING",
+    "break": "BREAK",
+    "print": "PRINT",
+    "read": "READ",
+    "return": "RETURN",
+    "if": "IF",
+    "else": "ELSE",
+    "for": "FOR",
+    "new": "NEW",
+}
+
+TOKENS = list(RESERVED.values()) + [
+    # boolean operators
+    "LESSER_THAN",
+    "GREATER_THAN",
+    "LESS_OR_EQUAL_THAN",
+    "GREATER_OR_EQUAL_THAN",
+    "EQUAL",
+    "NOT_EQUAL",
+    # math operators
+    "PLUS",
+    "MINUS",
+    "TIMES",
+    "DIVISION",
+    "MODULO",
+    # limits
+    "COMMA",
+    "SEMICOLON",
+    "LEFT_BRACKET",
+    "RIGHT_BRACKET",
+    "LEFT_PARENTHESIS",
+    "RIGHT_PARENTHESIS",
+    "LEFT_SQUARE_BRACKET",
+    "RIGHT_SQUARE_BRACKET",
+    # etc
+    "NULL",
+    "COMMENT",
+    "ATTRIBUTION",
+    "STRING_CONSTANT",
+    "LABEL",  # 'ident'
+    "FLOATING_POINT_CONSTANT",
+    "INTEGER_CONSTANT",
+]
+
 
 class Lexer(object):
-    reserved = {
-        "def": "FUNCTION_DECLARATION",
-        "int": "INTEGER",
-        "float": "FLOATING_POINT",
-        "string": "STRING",
-        "break": "BREAK",
-        "print": "PRINT",
-        "read": "READ",
-        "return": "RETURN",
-        "if": "IF",
-        "else": "ELSE",
-        "for": "FOR",
-        "new": "NEW",
-    }
-
-    tokens = list(reserved.values()) + [
-        # boolean operators
-        "LESSER_THAN",
-        "GREATER_THAN",
-        "LESS_OR_EQUAL_THAN",
-        "GREATER_OR_EQUAL_THAN",
-        "EQUAL",
-        "NOT_EQUAL",
-        # math operators
-        "PLUS",
-        "MINUS",
-        "TIMES",
-        "DIVISION",
-        "MODULO",
-        # limits
-        "COMMA",
-        "SEMICOLON",
-        "LEFT_BRACKET",
-        "RIGHT_BRACKET",
-        "LEFT_PARENTHESIS",
-        "RIGHT_PARENTHESIS",
-        "LEFT_SQUARE_BRACKET",
-        "RIGHT_SQUARE_BRACKET",
-        # etc
-        "NULL",
-        "COMMENT",
-        "ATTRIBUTION",
-        "STRING_CONSTANT",
-        "LABEL",  # 'ident'
-        "FLOATING_POINT_CONSTANT",
-        "INTEGER_CONSTANT",
-    ]
+    reserved = RESERVED
+    tokens = TOKENS
 
     # Tokens regular expression
     t_LESSER_THAN = r"<"

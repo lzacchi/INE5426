@@ -8,11 +8,13 @@
 #
 
 import sys
-
+import ply.yacc as yacc
 from lexer import Lexer
-from ply.lex import LexToken
-from typing import List
 from output import print_tokens, print_symbol_table, InvalidTokenError
+
+# Ply necessary imports
+from lexer import TOKENS as tokens
+from syntax import *
 
 
 def main(src: str) -> None:
@@ -23,13 +25,18 @@ def main(src: str) -> None:
     lexer.build()
     lexer.input(src)
 
-    try:
-        tokens = lexer.token_list()
-    except InvalidTokenError as err:
-        sys.exit(-1)
+    # try:
+    #     tokens = lexer.token_list()
+    # except InvalidTokenError as err:
+    #     sys.exit(-1)
 
-    print_tokens(tokens)
-    print_symbol_table(tokens)
+    # print_tokens(tokens)
+    # TODO: fix symbol table as requested in T1
+    # print_symbol_table(tokens)
+
+    parser = yacc.yacc()
+    result = parser.parse(src, debug=True)
+    print(result)
 
 
 if __name__ == "__main__":

@@ -23,6 +23,7 @@ def print_tokens(tokens: List) -> None:
     pprint(result, indent=4)
 
 
+# TODO: fix symbol table as requested in T1
 def print_symbol_table(tokens: List) -> None:
     print("\nPrinting symbol table:")
     table = [[t.lexpos, t.lineno, t.type, t.value] for t in tokens]
