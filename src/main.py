@@ -10,7 +10,7 @@
 import sys
 import ply.yacc as yacc
 from lexer import Lexer
-from output import print_tokens, print_symbol_table, InvalidTokenError
+from output import print_tokens, print_symbol_table, InvalidTokenError, print_separator
 
 # Ply necessary imports
 from lexer import TOKENS as tokens
@@ -25,17 +25,18 @@ def main(src: str) -> None:
     lexer.build()
     lexer.input(src)
 
-    # try:
-    #     tokens = lexer.token_list()
-    # except InvalidTokenError as err:
-    #     sys.exit(-1)
+    try:
+        token_list = lexer.token_list()
+    except InvalidTokenError as err:
+        sys.exit(-1)
 
-    # print_tokens(tokens)
+    print_tokens(token_list)
     # TODO: fix symbol table as requested in T1
-    # print_symbol_table(tokens)
+    print_symbol_table(token_list)
+    print_separator()
 
     parser = yacc.yacc()
-    result = parser.parse(src, debug=True)
+    result = parser.parse(src)
     print(result)
 
 

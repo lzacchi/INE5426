@@ -6,10 +6,10 @@ CCYELLOW=\033[0;33m
 CCRED=\033[0;31m
 CCEND=\033[0m
 
-src=source-code/success.lua
-program_1=source-code/program1.lua
-program_2=source-code/program2.lua
-program_3=source-code/program3.lua
+src=test-code/syntax-analysis/success.lua
+program_1=test-code/program1.lua
+program_2=test-code/program2.lua
+program_3=test-code/program3.lua
 
 .PHONY:
 all: install-poetry install run
