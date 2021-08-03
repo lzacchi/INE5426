@@ -8,9 +8,176 @@
 from ply.lex import LexToken
 
 
-def p_EXPRESSION(p: LexToken) -> None:
+def p_PROGRAM(p: LexToken) -> None:
     """
-    EXPRESSION : NUMEXPRESSION
+    PROGRAM : STATEMENT
+            | FUNCLIST
+            | empty
+    """
+    p[0] = p[1]
+
+
+def p_FUNCLIST(p: LexToken) -> None:
+    """
+    FUNCLIST : FUNCDEF FUNCLIST
+             | FUNCDEF
+    """
+    p[0] = p[1]
+
+
+def p_FUNCLISTAUX(p: LexToken) -> None:
+    """
+    FUNCLISTAUX : FUNCLIST
+    """
+    p[0] = p[1]
+
+
+def p_FUNCDEF(p: LexToken) -> None:
+    """
+    FUNCDEF : FUNCTION_DECLARATION LABEL LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
+    """
+    p[0] = p[1]
+
+
+def p_DATATYPE(p: LexToken) -> None:
+    """
+    DATATYPE : INTEGER
+             | FLOATING_POINT
+             | STRING
+    """
+    p[0] = p[1]
+
+
+def p_PARAMLIST(p: LexToken) -> None:
+    """
+    PARAMLIST : DATATYPE LABEL COMMA PARAMLIST
+              | DATATYPE LABEL
+    """
+    p[0] = p[1]
+
+
+def p_STATEMENT(p: LexToken) -> None:
+    """
+    STATEMENT : VARDECL SEMICOLON
+              | ATRIBSTAT SEMICOLON
+              | PRINTSTAT SEMICOLON
+              | READSTAT SEMICOLON
+              | RETURNSTAT SEMICOLON
+              | IFSTAT
+              | FORSTAT
+              | LEFT_BRACKET STATELIST RIGHT_BRACKET
+              | BREAK SEMICOLON
+              | SEMICOLON
+    """
+    p[0] = p[1]
+
+
+def p_VARDECL(p: LexToken) -> None:
+    """
+    VARDECL : DATATYPE LABEL OPTIONAL_VECTOR
+    """
+    p[0] = p[1]
+
+
+def p_OPTIONAL_VECTOR(p: LexToken) -> None:
+    """
+    OPTIONAL_VECTOR : LEFT_SQUARE_BRACKET INTEGER_CONSTANT RIGHT_SQUARE_BRACKET OPTIONAL_VECTOR
+    """
+    p[0] = p[1]
+
+
+def p_ATRIB_RIGHT(p: LexToken) -> None:
+    """
+    ATRIB_RIGHT : EXPRESSION
+                | ALOCEXPRESSION
+                | FUNCCALL
+    """
+    p[0] = p[1]
+
+
+def p_ATRIBSTAT(p: LexToken) -> None:
+    """
+    ATRIBSTAT : LVALUE ATTRIBUTION ATRIB_RIGHT
+    """
+    p[0] = p[1]
+
+
+def p_FUNCCALL(p: LexToken) -> None:
+    """
+    FUNCCALL : LABEL LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
+    """
+    p[0] = p[1]
+
+
+def p_PARAMLISTCALL(p: LexToken) -> None:
+    """
+    PARAMLISTCALL : LABEL COMMA PARAMLISTCALL
+                  | LABEL
+    """
+    p[0] = p[1]
+
+
+def p_PRINTSTAT(p: LexToken) -> None:
+    """
+    PRINTSTAT : PRINT EXPRESSION
+    """
+    p[0] = p[1]
+
+
+def p_READSTAT(p: LexToken) -> None:
+    """
+    READSTAT : READ LVALUE
+    """
+    p[0] = p[1]
+
+
+def p_RETURNSTAT(p: LexToken) -> None:
+    """
+    RETURNSTAT : RETURN
+    """
+    p[0] = p[1]
+
+
+def p_IFSTAT(p: LexToken) -> None:
+    """
+    IFSTAT : IF LEFT_PARENTHESIS EXPRESSION RIGHT_PARENTHESIS STATEMENT OPTIONAL_ELSE
+    """
+    p[0] = p[1]
+
+
+def p_OPTIONAL_ELSE(p: LexToken) -> None:
+    """
+    OPTIONAL_ELSE : LEFT_PARENTHESIS STATEMENT RIGHT_PARENTHESIS
+    """
+    p[0] = p[1]
+
+
+def p_FORSTAT(p: LexToken) -> None:
+    """
+    FORSTAT : FOR LEFT_PARENTHESIS ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RIGHT_PARENTHESIS STATEMENT
+    """
+    p[0] = p[1]
+
+
+def p_STATELIST(p: LexToken) -> None:
+    """
+    STATELIST : STATEMENT OPTIONAL_STATELIST
+    """
+    p[0] = p[1]
+
+
+def p_OPTIONAL_STATELIST(p: LexToken) -> None:
+    """
+    OPTIONAL_STATELIST : STATELIST
+                       | empty
+    """
+    p[0] = p[1]
+
+
+def p_ALLOCEXPRESSION(p: LexToken) -> None:
+    """
+    ALLOCEXPRESSION : NEW DATATYPE NUMEXPRESION OPT_ALLOC_NUMEXP
+                    | NEW DATATYPE OPT_ALLOC_NUMEXP
     """
     p[0] = p[1]
 
@@ -21,6 +188,13 @@ def p_EXPRESSION(p: LexToken) -> None:
 #                                       | OPTIONAL_ALLOCATION_NUMEXPRESSION
 #     """
 #     p[0] = p[1]
+
+
+def p_EXPRESSION(p: LexToken) -> None:
+    """
+    EXPRESSION : NUMEXPRESSION
+    """
+    p[0] = p[1]
 
 
 def p_REL_OP(p: LexToken) -> None:

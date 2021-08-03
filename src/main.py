@@ -32,7 +32,7 @@ def main(src: str) -> None:
 
     print_tokens(token_list)
     # TODO: fix symbol table as requested in T1
-    print_symbol_table(token_list)
+    # print_symbol_table(token_list)
     print_separator()
 
     parser = yacc.yacc()
