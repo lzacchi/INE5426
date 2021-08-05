@@ -35,8 +35,9 @@ def main(src: str) -> None:
     # print_symbol_table(token_list)
     print_separator()
 
-    parser = yacc.yacc()
-    result = parser.parse(src)
+    print("Executing yacc")
+    parser = yacc.yacc(debug=True)
+    result = parser.parse(src, debug=True)
     print(result)
 
 

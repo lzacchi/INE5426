@@ -99,6 +99,7 @@ class Lexer(object):
     def t_LABEL(self, t: LexToken) -> LexToken:
         r"[a-zA-Z][A-Za-z0-9_]*"
         t.type = self.reserved.get(t.value, "LABEL")
+        t.value = t.value
         return t
 
     def t_FLOATING_POINT_CONSTANT(self, t: LexToken) -> LexToken:
