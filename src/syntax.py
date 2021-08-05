@@ -146,7 +146,8 @@ def p_OPTIONAL_ELSE(p: LexToken) -> None:
     OPTIONAL_ELSE : LEFT_PARENTHESIS STATEMENT RIGHT_PARENTHESIS
                   | empty
     """
-    pass
+    if p[1]:
+        p[0] = p[2]
 
 
 def p_FORSTAT(p: LexToken) -> None:
