@@ -36,7 +36,7 @@ def main(src: str) -> None:
     print_separator()
 
     print("Executing yacc")
-    parser = yacc.yacc(debug=True)
+    parser = yacc.yacc()
     result = parser.parse(src, debug=True)
     print(result)
 

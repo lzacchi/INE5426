@@ -5,6 +5,7 @@
 #          Lucas Verdade
 #          Lucas Zacchi
 
+import re
 from ply.lex import LexToken
 
 
@@ -14,7 +15,7 @@ def p_PROGRAM(p: LexToken) -> None:
             | FUNCLIST
             | empty
     """
-    pass
+    p[0] = p[1]
 
 
 def p_FUNCLIST(p: LexToken) -> None:
@@ -117,7 +118,7 @@ def p_PRINTSTAT(p: LexToken) -> None:
     """
     PRINTSTAT : PRINT EXPRESSION
     """
-    pass
+    print(p)
 
 
 def p_READSTAT(p: LexToken) -> None:
@@ -143,11 +144,13 @@ def p_IFSTAT(p: LexToken) -> None:
 
 def p_OPTIONAL_ELSE(p: LexToken) -> None:
     """
-    OPTIONAL_ELSE : LEFT_PARENTHESIS STATEMENT RIGHT_PARENTHESIS
+    OPTIONAL_ELSE : LEFT_BRACKET STATEMENT RIGHT_BRACKET
                   | empty
     """
     if p[1]:
         p[0] = p[2]
+    else:
+        p[0] = None
 
 
 def p_FORSTAT(p: LexToken) -> None:
@@ -174,14 +177,14 @@ def p_OPTIONAL_STATELIST(p: LexToken) -> None:
 
 def p_ALLOCEXPRESSION(p: LexToken) -> None:
     """
-    ALLOCEXPRESSION : NEW DATATYPE LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOCATION_NUMEXPRESSION
+    ALLOCEXPRESSION : NEW DATATYPE LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
     """
     pass
 
 
-def p_OPTIONAL_ALLOCATION_NUMEXPRESSION(p: LexToken) -> None:
+def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: LexToken) -> None:
     """
-    OPTIONAL_ALLOCATION_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOCATION_NUMEXPRESSION
+    OPTIONAL_ALLOC_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
                                       | empty
     """
     pass
@@ -189,16 +192,17 @@ def p_OPTIONAL_ALLOCATION_NUMEXPRESSION(p: LexToken) -> None:
 
 def p_EXPRESSION(p: LexToken) -> None:
     """
-    EXPRESSION : NUMEXPRESSION OPTIONAL_REL_OP_NUMERICAL_EXPRESSION
+    EXPRESSION : NUMEXPRESSION OPTIONAL_REL_OP_NUMEXPRESSION
     """
     pass
 
 
-def p_OPTIONAL_REL_OP_NUMERICAL_EXPRESSION(p: LexToken) -> None:
+def p_OPTIONAL_REL_OP_NUMEXPRESSION(p: LexToken) -> None:
     """
-    OPTIONAL_REL_OP_NUMERICAL_EXPRESSION : REL_OP NUMEXPRESSION
+    OPTIONAL_REL_OP_NUMEXPRESSION : REL_OP NUMEXPRESSION
                                          | empty
     """
+    # if p[1] is None p[0] =
     pass
 
 
@@ -218,7 +222,14 @@ def p_NUMEXPRESSION(p: LexToken) -> None:
     """
     NUMEXPRESSION : TERM RECURSIVE_MINUS_OR_PLUS
     """
-    pass
+    term = p[1]
+    recursion = p[2]
+    if recursion is None:
+        p[0] = term
+    else:
+        rec_operator = recursion[0]
+        rec_term = recursion[1]
+        p[0] = eval(f"{term} {rec_operator} {rec_term}")
 
 
 def p_RECURSIVE_MINUS_OR_PLUS(p: LexToken) -> None:
@@ -226,9 +237,22 @@ def p_RECURSIVE_MINUS_OR_PLUS(p: LexToken) -> None:
     RECURSIVE_MINUS_OR_PLUS : MINUS_OR_PLUS TERM RECURSIVE_MINUS_OR_PLUS
                             | empty
     """
-    pass
+    if p[1] is None:
+        p[0] = None
+    if p[3] is None:
+        operator = p[1]
+        term = p[2]
+        p[0] = (operator, term)
+    elif p[3] is not None:
+        operator = p[1]
+        term = p[2]
+        recursion = p[3]
+        rec_operator = recursion[0]
+        rec_term = recursion[1]
+        p[0] = eval(f"{operator} {term} {rec_operator} {rec_term}")
 
 
+# str
 def p_MINUS_OR_PLUS(p: LexToken) -> None:
     """
     MINUS_OR_PLUS : MINUS
@@ -241,17 +265,26 @@ def p_TERM(p: LexToken) -> None:
     """
     TERM : UNARYEXPR RECURSIVE_UNARYEXPR
     """
-    pass
+    factor = p[1][1]
+    operator = p[1][0]
+    rec_operator = p[2][0]
+    rec_term = p[2][1]
+    p[0] = eval(f"{factor}{operator} {rec_operator} {rec_term}")
 
 
+# Tuple(operator, term)
 def p_RECURSIVE_UNARYEXPR(p: LexToken) -> None:
     """
     RECURSIVE_UNARYEXPR : UNARYEXPR_OPERATOR TERM
                         | empty
     """
-    pass
+    if p[1] is not None:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = None
 
 
+# str
 def p_UNARYEXPR_OPERATOR(p: LexToken) -> None:
     """
     UNARYEXPR_OPERATOR : TIMES
@@ -266,7 +299,9 @@ def p_UNARYEXPR(p: LexToken) -> None:
     UNARYEXPR : MINUS_OR_PLUS FACTOR
               | FACTOR
     """
-    pass
+    operator = p[0] if p[1] != "-" or p[1] != "+" else p[1]
+    factor = p[1] if len(p) == 1 else p[2]
+    p[0] = (operator, factor)
 
 
 def p_FACTOR(p: LexToken) -> None:
@@ -278,15 +313,28 @@ def p_FACTOR(p: LexToken) -> None:
            | LVALUE
            | LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS
     """
-    if p[1] == "(":
+    text = str(p[1])
+    is_integer = re.search(r"\d+", text)
+    is_floating_point = re.search(r"\d+\.\d+", text)
+    is_string = re.search(r'".*"', text)
+    if p[1] == "(" and p[3] == ")":
         p[0] = p[2]
-    else:
+    elif p[1] == "nil":
+        pass
+    elif is_integer:
+        p[0] = int(p[1])
+    elif is_floating_point:
+        p[0] = float(p[1])
+    elif is_string:
         p[0] = p[1]
+    else:
+        # lvalue
+        pass
 
 
 def p_LVALUE(p: LexToken) -> None:
     """
-    LVALUE : LABEL OPTIONAL_ALLOCATION_NUMEXPRESSION
+    LVALUE : LABEL OPTIONAL_ALLOC_NUMEXPRESSION
     """
     p[0] = p[1]
 
@@ -297,4 +345,4 @@ def p_empty(p: LexToken) -> None:
 
 
 def p_error(p: LexToken) -> None:
-    print(f"Syntax error at token {p}")
+    print(f"Syntax error at token {p} ")
