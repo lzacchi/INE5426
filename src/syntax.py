@@ -64,7 +64,8 @@ def p_STATEMENT(p: LexToken) -> None:
               | BREAK SEMICOLON
               | SEMICOLON
     """
-    pass
+    if len(p) == 3 and ";":
+        p[0] = p[1]
 
 
 def p_VARDECL(p: LexToken) -> None:
@@ -194,16 +195,27 @@ def p_EXPRESSION(p: LexToken) -> None:
     """
     EXPRESSION : NUMEXPRESSION OPTIONAL_REL_OP_NUMEXPRESSION
     """
-    pass
+    optional = p[2]
+    numexpr = p[1]
+    if not optional:
+        p[0] = numexpr
+    else:
+        optional_op = optional[0]
+        optional_numexpr = optional[1]
+        p[0] = eval(f"{numexpr} {optional_op} {optional_numexpr}")
 
 
 def p_OPTIONAL_REL_OP_NUMEXPRESSION(p: LexToken) -> None:
     """
     OPTIONAL_REL_OP_NUMEXPRESSION : REL_OP NUMEXPRESSION
-                                         | empty
+                                  | empty
     """
-    # if p[1] is None p[0] =
-    pass
+    if p[1] is None:
+        p[0] = None
+    else:
+        operator = p[1]
+        numexpr = p[2]
+        p[0] = (operator, numexpr)
 
 
 def p_REL_OP(p: LexToken) -> None:
@@ -215,7 +227,7 @@ def p_REL_OP(p: LexToken) -> None:
            | EQUAL
            | NOT_EQUAL
     """
-    pass
+    p[0] = p[1]
 
 
 def p_NUMEXPRESSION(p: LexToken) -> None:
@@ -278,7 +290,7 @@ def p_RECURSIVE_UNARYEXPR(p: LexToken) -> None:
     RECURSIVE_UNARYEXPR : UNARYEXPR_OPERATOR TERM
                         | empty
     """
-    if p[1] is not None:
+    if len(p) == 3:
         p[0] = (p[1], p[2])
     else:
         p[0] = None
@@ -299,8 +311,8 @@ def p_UNARYEXPR(p: LexToken) -> None:
     UNARYEXPR : MINUS_OR_PLUS FACTOR
               | FACTOR
     """
-    operator = p[0] if p[1] != "-" or p[1] != "+" else p[1]
-    factor = p[1] if len(p) == 1 else p[2]
+    operator = p[1] if len(p) == 3 else None
+    factor = p[2] if len(p) == 3 else p[1]
     p[0] = (operator, factor)
 
 
@@ -317,19 +329,18 @@ def p_FACTOR(p: LexToken) -> None:
     is_integer = re.search(r"\d+", text)
     is_floating_point = re.search(r"\d+\.\d+", text)
     is_string = re.search(r'".*"', text)
-    if p[1] == "(" and p[3] == ")":
+    if len(p) == 4:  # numexpr
         p[0] = p[2]
     elif p[1] == "nil":
-        pass
+        p[0] = None
     elif is_integer:
         p[0] = int(p[1])
     elif is_floating_point:
         p[0] = float(p[1])
     elif is_string:
         p[0] = p[1]
-    else:
-        # lvalue
-        pass
+    else:  # lvalue
+        p[0] = p[1]
 
 
 def p_LVALUE(p: LexToken) -> None:
