@@ -64,7 +64,7 @@ def p_STATEMENT(p: LexToken) -> None:
               | BREAK SEMICOLON
               | SEMICOLON
     """
-    if len(p) == 3 and ";":
+    if len(p) == 3 and p[2] == ";":
         p[0] = p[1]
 
 
@@ -119,7 +119,7 @@ def p_PRINTSTAT(p: LexToken) -> None:
     """
     PRINTSTAT : PRINT EXPRESSION
     """
-    print(p)
+    print(p[2])
 
 
 def p_READSTAT(p: LexToken) -> None:
@@ -249,13 +249,13 @@ def p_RECURSIVE_MINUS_OR_PLUS(p: LexToken) -> None:
     RECURSIVE_MINUS_OR_PLUS : MINUS_OR_PLUS TERM RECURSIVE_MINUS_OR_PLUS
                             | empty
     """
-    if p[1] is None:
+    if len(p) == 2:
         p[0] = None
-    if p[3] is None:
+    elif len(p) == 4 and p[3] is None:
         operator = p[1]
         term = p[2]
         p[0] = (operator, term)
-    elif p[3] is not None:
+    elif len(p) == 4 and p[3] is not None:
         operator = p[1]
         term = p[2]
         recursion = p[3]
@@ -277,11 +277,16 @@ def p_TERM(p: LexToken) -> None:
     """
     TERM : UNARYEXPR RECURSIVE_UNARYEXPR
     """
-    factor = p[1][1]
     operator = p[1][0]
-    rec_operator = p[2][0]
-    rec_term = p[2][1]
-    p[0] = eval(f"{factor}{operator} {rec_operator} {rec_term}")
+    factor = p[1][1]
+    try:
+        rec_operator = p[2][0]
+        rec_term = p[2][1]
+        p[0] = eval(f"{factor}{operator} {rec_operator} {rec_term}")
+    except:
+        # when the recursive_unaryexpression returns a 'None' operator we
+        # return the accumulated factor
+        p[0] = factor
 
 
 # Tuple(operator, term)
@@ -296,7 +301,6 @@ def p_RECURSIVE_UNARYEXPR(p: LexToken) -> None:
         p[0] = None
 
 
-# str
 def p_UNARYEXPR_OPERATOR(p: LexToken) -> None:
     """
     UNARYEXPR_OPERATOR : TIMES
@@ -356,4 +360,4 @@ def p_empty(p: LexToken) -> None:
 
 
 def p_error(p: LexToken) -> None:
-    print(f"Syntax error at token {p} ")
+    print(f"Syntax error at token {p}\nlexer info:\n{p.lexer}")
