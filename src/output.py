@@ -21,6 +21,10 @@ class InvalidTokenError(Exception):
     pass
 
 
+class VariableAlreadyDeclared(Exception):
+    pass
+
+
 def print_tokens(tokens: List) -> None:
     result = [(t.type, t.value) for t in tokens]
     print("\nPrinting token list: ('Token enumerator', 'Token value'):")

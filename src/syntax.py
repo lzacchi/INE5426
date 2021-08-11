@@ -6,7 +6,14 @@
 #          Lucas Zacchi
 
 import re
+from typing import Any, Dict, Tuple
 from ply.lex import LexToken
+
+from output import VariableAlreadyDeclared
+
+
+#              label  type value
+variables: Dict[str, Tuple[str, Any]] = {}
 
 
 def p_PROGRAM(p: LexToken) -> None:
@@ -86,7 +93,14 @@ def p_VARDECL(p: LexToken) -> None:
     """
     VARDECL : DATATYPE LABEL OPTIONAL_VECTOR
     """
-    pass
+    datatype = p[1]
+    label = p[2]
+    # opt_vector = p[3] # todo
+
+    if label in variables.keys():
+        raise VariableAlreadyDeclared
+
+    variables[label] = (datatype, None)
 
 
 def p_OPTIONAL_VECTOR(p: LexToken) -> None:
@@ -103,7 +117,7 @@ def p_ATRIB_RIGHT(p: LexToken) -> None:
                 | ALLOCEXPRESSION
                 | FUNCCALL
     """
-    pass
+    p[0] = p[1]
 
 
 def p_ATRIBSTAT(p: LexToken) -> None:
@@ -140,7 +154,7 @@ def p_READSTAT(p: LexToken) -> None:
     """
     READSTAT : READ LVALUE
     """
-    pass
+    p[0] = input(p[2])
 
 
 def p_RETURNSTAT(p: LexToken) -> None:
@@ -154,9 +168,10 @@ def p_IFSTAT(p: LexToken) -> None:
     """
     IFSTAT : IF LEFT_PARENTHESIS EXPRESSION RIGHT_PARENTHESIS STATEMENT OPTIONAL_ELSE
     """
-    if len(p) == 6:
-        # optional_else
-        pass
+    if p[3] is True:
+        p[0] = p[5]
+    else:
+        p[0] = p[6]
 
 
 def p_OPTIONAL_ELSE(p: LexToken) -> None:
@@ -202,7 +217,7 @@ def p_ALLOCEXPRESSION(p: LexToken) -> None:
 def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: LexToken) -> None:
     """
     OPTIONAL_ALLOC_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
-                                      | empty
+                                 | empty
     """
     pass
 
