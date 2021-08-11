@@ -1,5 +1,5 @@
 #
-# lexer.py
+# syntax.py
 #
 # Authors: Artur Barichello
 #          Lucas Verdade
@@ -20,8 +20,15 @@ def p_PROGRAM(p: LexToken) -> None:
 
 def p_FUNCLIST(p: LexToken) -> None:
     """
-    FUNCLIST : FUNCDEF FUNCLIST
-             | FUNCDEF
+    FUNCLIST : FUNCDEF FUNCLISTTMP
+    """
+    pass
+
+
+def p_FUNCLISTTMP(p: LexToken) -> None:
+    """
+    FUNCLISTTMP : FUNCLIST
+                | empty
     """
     pass
 
@@ -30,7 +37,8 @@ def p_FUNCDEF(p: LexToken) -> None:
     """
     FUNCDEF : FUNCTION_DECLARATION LABEL LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
-    pass
+    # list containing label, paramlist and statelist
+    p[0] = [p[2], p[4], p[7]]
 
 
 def p_DATATYPE(p: LexToken) -> None:
@@ -39,7 +47,7 @@ def p_DATATYPE(p: LexToken) -> None:
              | FLOATING_POINT
              | STRING
     """
-    pass
+    p[0] = p[1]
 
 
 def p_PARAMLIST(p: LexToken) -> None:
@@ -140,7 +148,9 @@ def p_IFSTAT(p: LexToken) -> None:
     """
     IFSTAT : IF LEFT_PARENTHESIS EXPRESSION RIGHT_PARENTHESIS STATEMENT OPTIONAL_ELSE
     """
-    pass
+    if len(p) == 6:
+        # optional_else
+        pass
 
 
 def p_OPTIONAL_ELSE(p: LexToken) -> None:

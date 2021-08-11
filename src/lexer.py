@@ -54,7 +54,6 @@ TOKENS = list(RESERVED.values()) + [
     "RIGHT_SQUARE_BRACKET",
     # etc
     "NULL",
-    "COMMENT",
     "ATTRIBUTION",
     "STRING_CONSTANT",
     "LABEL",  # 'ident'
