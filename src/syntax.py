@@ -38,7 +38,8 @@ def p_FUNCDEF(p: LexToken) -> None:
     FUNCDEF : FUNCTION_DECLARATION LABEL LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
     # list containing label, paramlist and statelist
-    p[0] = [p[2], p[4], p[7]]
+    pass
+    # p[0] = (p[2], p[4], p[7])
 
 
 def p_DATATYPE(p: LexToken) -> None:
@@ -57,6 +58,11 @@ def p_PARAMLIST(p: LexToken) -> None:
               | empty
     """
     pass
+    # if len(p) == 5:  # multiple parameters
+    #     params = [param for param in p[4]]
+    #     p[0] = (p[1], p[2], params)
+    # else:
+    #     p[0] = (p[1], p[2])
 
 
 def p_STATEMENT(p: LexToken) -> None:
@@ -290,9 +296,10 @@ def p_TERM(p: LexToken) -> None:
     operator = p[1][0]
     factor = p[1][1]
     try:
-        rec_operator = p[2][0]
+        operator = p[2][0]
         rec_term = p[2][1]
-        p[0] = eval(f"{factor}{operator} {rec_operator} {rec_term}")
+        eval_str = f"{factor} {operator} {rec_term}"
+        p[0] = eval(eval_str)
     except:
         # when the recursive_unaryexpression returns a 'None' operator we
         # return the accumulated factor
