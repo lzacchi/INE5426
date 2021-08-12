@@ -6,13 +6,16 @@
 #          Lucas Zacchi
 
 import re
+from os import stat
+from collections import namedtuple
 from typing import Any, Dict, Tuple
 from ply.lex import LexToken
-
 from output import VariableAlreadyDeclared
 
+AtribStat = namedtuple("AtribStat", "lvalue atrib_right")
+AllocExpression = namedtuple("AllocExpression", "datatype indexes")
 
-#              label  type value
+#              label      type value
 variables: Dict[str, Tuple[str, Any]] = {}
 
 
@@ -29,7 +32,7 @@ def p_FUNCLIST(p: LexToken) -> None:
     """
     FUNCLIST : FUNCDEF FUNCLISTTMP
     """
-    pass
+    p[0] = (p[1], p[2])
 
 
 def p_FUNCLISTTMP(p: LexToken) -> None:
@@ -37,16 +40,19 @@ def p_FUNCLISTTMP(p: LexToken) -> None:
     FUNCLISTTMP : FUNCLIST
                 | empty
     """
-    pass
+    p[0] = p[1]
 
 
 def p_FUNCDEF(p: LexToken) -> None:
     """
     FUNCDEF : FUNCTION_DECLARATION LABEL LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
+    # pass
     # list containing label, paramlist and statelist
-    pass
-    # p[0] = (p[2], p[4], p[7])
+    label = p[2]
+    paramlist = p[4]
+    statelist = p[7]
+    p[0] = (label, paramlist, statelist)
 
 
 def p_DATATYPE(p: LexToken) -> None:
@@ -64,12 +70,13 @@ def p_PARAMLIST(p: LexToken) -> None:
               | DATATYPE LABEL
               | empty
     """
-    pass
-    # if len(p) == 5:  # multiple parameters
-    #     params = [param for param in p[4]]
-    #     p[0] = (p[1], p[2], params)
-    # else:
-    #     p[0] = (p[1], p[2])
+    if len(p) == 5:  # multiple parameters
+        params = [param for param in p[4]]
+        p[0] = (p[1], p[2], params)
+    elif len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
 
 
 def p_STATEMENT(p: LexToken) -> None:
@@ -85,7 +92,12 @@ def p_STATEMENT(p: LexToken) -> None:
               | BREAK SEMICOLON
               | SEMICOLON
     """
-    if len(p) == 3 and p[2] == ";":
+    if len(p) == 3 and p[2] == ";" and p[1] == AtribStat:
+        atribstat = p[1]
+        lvalue = atribstat.lvalue
+        atrib_right = atribstat.atrib_right
+        label = lvalue[0]
+        variables[label] = atrib_right
         p[0] = p[1]
 
 
@@ -95,11 +107,14 @@ def p_VARDECL(p: LexToken) -> None:
     """
     datatype = p[1]
     label = p[2]
-    # opt_vector = p[3] # todo
+    # opt_vector = p[3]  # todo
 
     if label in variables.keys():
         raise VariableAlreadyDeclared
 
+    # if opt_vector:
+    # variables[label] = (datatype, opt_vector)
+    # else:
     variables[label] = (datatype, None)
 
 
@@ -108,7 +123,10 @@ def p_OPTIONAL_VECTOR(p: LexToken) -> None:
     OPTIONAL_VECTOR : LEFT_SQUARE_BRACKET INTEGER_CONSTANT RIGHT_SQUARE_BRACKET OPTIONAL_VECTOR
                     | empty
     """
-    pass
+    if len(p) == 5:  # multiple opt_vector
+        vectors = [v for v in p[4]]
+        vectors.insert(p[0], 0)
+        p[0] = vectors
 
 
 def p_ATRIB_RIGHT(p: LexToken) -> None:
@@ -124,14 +142,18 @@ def p_ATRIBSTAT(p: LexToken) -> None:
     """
     ATRIBSTAT : LVALUE ATTRIBUTION ATRIB_RIGHT
     """
-    pass
+    lvalue = p[1]
+    atrib_right = p[3]
+    p[0] = (lvalue, atrib_right)
 
 
 def p_FUNCCALL(p: LexToken) -> None:
     """
     FUNCCALL : LABEL LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
     """
-    pass
+    label = p[1]
+    paramlistcall = p[3]
+    p[0] = (label, paramlistcall)
 
 
 def p_PARAMLISTCALL(p: LexToken) -> None:
@@ -140,7 +162,10 @@ def p_PARAMLISTCALL(p: LexToken) -> None:
                   | LABEL
                   | empty
     """
-    pass
+    if len(p) > 2:
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
 
 
 def p_PRINTSTAT(p: LexToken) -> None:
@@ -176,27 +201,36 @@ def p_IFSTAT(p: LexToken) -> None:
 
 def p_OPTIONAL_ELSE(p: LexToken) -> None:
     """
-    OPTIONAL_ELSE : LEFT_BRACKET STATEMENT RIGHT_BRACKET
+    OPTIONAL_ELSE : ELSE LEFT_BRACKET STATEMENT RIGHT_BRACKET
                   | empty
     """
-    if p[1]:
-        p[0] = p[2]
-    else:
+    if len(p) == 2:
         p[0] = None
+    else:
+        p[0] = p[3]
 
 
 def p_FORSTAT(p: LexToken) -> None:
     """
     FORSTAT : FOR LEFT_PARENTHESIS ATRIBSTAT SEMICOLON EXPRESSION SEMICOLON ATRIBSTAT RIGHT_PARENTHESIS STATEMENT
     """
-    pass
+    forstat = p[1]
+    first_atrib = p[3]
+    expression = p[5]
+    second_atrib = p[7]
+    statement = p[9]
+
+    p[0] = (forstat, first_atrib, expression, second_atrib, statement)
 
 
 def p_STATELIST(p: LexToken) -> None:
     """
     STATELIST : STATEMENT OPTIONAL_STATELIST
     """
-    pass
+    if len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
 
 
 def p_OPTIONAL_STATELIST(p: LexToken) -> None:
@@ -204,14 +238,21 @@ def p_OPTIONAL_STATELIST(p: LexToken) -> None:
     OPTIONAL_STATELIST : STATELIST
                        | empty
     """
-    pass
+    p[0] = p[1]
 
 
 def p_ALLOCEXPRESSION(p: LexToken) -> None:
     """
     ALLOCEXPRESSION : NEW DATATYPE LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
     """
-    pass
+    datatype = p[2]
+    numexpr = p[4]
+    optional_alloc = p[6]
+    if optional_alloc is None:
+        p[0] = AllocExpression(datatype, [numexpr])
+    else:
+        accumulated_index_list = optional_alloc[0]
+        p[0] = (datatype, numexpr + accumulated_index_list)
 
 
 def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: LexToken) -> None:
@@ -219,7 +260,16 @@ def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: LexToken) -> None:
     OPTIONAL_ALLOC_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
                                  | empty
     """
-    pass
+    if len(p) == 2:
+        p[0] = None
+    else:
+        numexpression = p[2]
+        optional_alloc = p[4]
+        if optional_alloc is None:
+            p[0] = ("", numexpression)
+        acc = optional_alloc[0]
+        rec_numexpression = optional_alloc[1]
+        p[0] = (acc + rec_numexpression, numexpression)
 
 
 def p_EXPRESSION(p: LexToken) -> None:
@@ -392,4 +442,7 @@ def p_empty(p: LexToken) -> None:
 
 
 def p_error(p: LexToken) -> None:
-    print(f"Syntax error at token {p}\nlexer info:\n{p.lexer}")
+    print(
+        f"""Syntax error at token {p}
+Line:{p.lineno-1} | Column:{p.lexpos-2}"""
+    )

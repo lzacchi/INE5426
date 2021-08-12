@@ -36,7 +36,7 @@ base_year = 1990;
 def initalize(){
   -- initialazing students
 
-  student_name[0] = "Arthur";
+  student_name[0] = "Artur";
   student_name[1] = "Lucas V";
   student_name[2] = "Lucas Z";
   student_name[3] = "Afonso";

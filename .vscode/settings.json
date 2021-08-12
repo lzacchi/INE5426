@@ -9,4 +9,5 @@
     "editor.formatOnSave": true,
     "python.linting.mypyEnabled": true,
     "python.linting.enabled": true,
+    "python.venvPath": "~/.cache/pypoetry/virtualenvs"
 }

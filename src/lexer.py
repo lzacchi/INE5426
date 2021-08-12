@@ -92,11 +92,11 @@ class Lexer(object):
     t_ignore_COMMENT = r"--.*"  # updated
     t_ignore = " \t"  # updated
     t_NULL = r"nil"  # updated
-    t_ATTRIBUTION = r"="
+    t_ATTRIBUTION = r"\="
     t_STRING_CONSTANT = r'".*"'
 
     def t_LABEL(self, t: LexToken) -> LexToken:
-        r"[a-zA-Z][A-Za-z0-9_]*"
+        r"[a-z][A-Za-z0-9_]*"
         t.type = self.reserved.get(t.value, "LABEL")
         t.value = t.value
         return t
