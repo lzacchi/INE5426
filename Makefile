@@ -6,10 +6,12 @@ CCYELLOW=\033[0;33m
 CCRED=\033[0;31m
 CCEND=\033[0m
 
-src=test-code/syntax-analysis/success.lua
+# src=test-code/syntax-analysis/success.lua
+src=test-code/syntax-analysis/printstat.lua
 program_1=test-code/program1.lua
 program_2=test-code/program2.lua
 program_3=test-code/program3.lua
+program_4=test-code/program4.lua
 
 .PHONY:
 all: install-poetry install run
@@ -42,6 +44,9 @@ run:
 
 	@echo -e "${CCGREEN}Executing main program3.lua${CCEND}"
 	@poetry run python src/main.py ${program_3} > output/lex-program3.txt
+
+	@echo -e "${CCGREEN}Executing main program4.lua${CCEND}"
+	@poetry run python src/main.py ${program_4} > output/lex-program4.txt
 
 	@echo -e "${CCGREEN}Done! Execution outputs are located in the output directory.${CCEND}"
 

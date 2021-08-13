@@ -47,7 +47,9 @@ def p_PROGRAM(p: LexToken) -> None:
     """
     result = p[1]
     if type(result) is StatementList:
-        p[0] = [r.value for r in result.value]
+        statement_results = [r.value for r in result.value]
+        statement_results.reverse()
+        p[0] = statement_results
     else:
         p[0] = p[1]
 

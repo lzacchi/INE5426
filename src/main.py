@@ -31,14 +31,15 @@ def main(src: str) -> None:
     except InvalidTokenError as err:
         sys.exit(-1)
 
-    print_tokens(token_list)
-    print_symbol_table(token_list)
-    print_separator()
+    # Prints da entrega 1:
+    # print_tokens(token_list)
+    # print_symbol_table(token_list)
+    # print_separator()
 
     print("Executing yacc")
     parser = yacc.yacc()
-    result = parser.parse(src)
-    # result = parser.parse(src, debug=True)
+    # result = parser.parse(src) # non-debug mode
+    result = parser.parse(src, debug=True)
     pprint(result)
 
 
