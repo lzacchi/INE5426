@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "test-code/syntax-analysis/success.lua"
+                "test-code/syntax-analysis/printstat.lua"
             ]
         }
     ]

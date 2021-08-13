@@ -5,7 +5,7 @@
 --          Lucas Verdade
 --          Lucas Zacchi
 
--- Código: smh.lua 
+-- Código: smh.lua
 -- SMH: Simple Math Helper
 -- Algorithm: Math functions to help your code to be cleaner
 
@@ -20,7 +20,7 @@ int tests = 1;
 -- Calculate the base to the exponent power, as in base^exponent
 def pow(float base, int exponent, float retval){
   retval = 1;
-  for (i=0; i < exponent; i++){ 
+  for (i=0; i < exponent; i++){
     retval = retval * base;
   }
   print("Result:");
@@ -45,7 +45,7 @@ def abs(float number, float retval){
   retval = number;
   if (number < 0){
     retval = -1.0 * number;
-  } 
+  }
   print("Result:");
   print(retval);
 }
@@ -60,7 +60,7 @@ def floor(float number, float retval){
 }
 
 -- Ceil
--- rounds 'number' up to the next largest integer. 
+-- rounds 'number' up to the next largest integer.
 def ceil(float number, float retval){
   float rest = number % 1;
   retval = number - rest;
@@ -70,7 +70,7 @@ def ceil(float number, float retval){
 }
 
 -- Round
--- Calculate the value of a number rounded to the nearest integer. 
+-- Calculate the value of a number rounded to the nearest integer.
 def round(float number, float retval){
   float rest = number % 1;
   if ( rest >= 0.5){
@@ -80,7 +80,7 @@ def round(float number, float retval){
     retval = number - rest;
   }
   print("Result:");
-  print(retval); 
+  print(retval);
 }
 
 -- running tests

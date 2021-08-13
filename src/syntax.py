@@ -6,14 +6,34 @@
 #          Lucas Zacchi
 
 import re
-from os import stat
+from dataclasses import dataclass
 from collections import namedtuple
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 from ply.lex import LexToken
 from output import VariableAlreadyDeclared
 
-AtribStat = namedtuple("AtribStat", "lvalue atrib_right")
-AllocExpression = namedtuple("AllocExpression", "datatype indexes")
+
+@dataclass
+class AtribStat:
+    lvalue: str
+    atrib_right: str
+
+
+@dataclass
+class AllocExpression:
+    datatype: Any
+    indexes: List[int]
+
+
+@dataclass
+class PrintStat:
+    value: Any
+
+
+@dataclass
+class StatementList:
+    value: List[Any]
+
 
 #              label      type value
 variables: Dict[str, Tuple[str, Any]] = {}
@@ -25,7 +45,11 @@ def p_PROGRAM(p: LexToken) -> None:
             | FUNCLIST
             | empty
     """
-    p[0] = p[1]
+    result = p[1]
+    if type(result) is StatementList:
+        p[0] = [r.value for r in result.value]
+    else:
+        p[0] = p[1]
 
 
 def p_FUNCLIST(p: LexToken) -> None:
@@ -92,13 +116,17 @@ def p_STATEMENT(p: LexToken) -> None:
               | BREAK SEMICOLON
               | SEMICOLON
     """
-    if len(p) == 3 and p[2] == ";" and p[1] == AtribStat:
+    if len(p) == 3 and type(p[1]) is AtribStat:
         atribstat = p[1]
         lvalue = atribstat.lvalue
         atrib_right = atribstat.atrib_right
         label = lvalue[0]
-        variables[label] = atrib_right
+        variables[label] = (label, atrib_right)
         p[0] = p[1]
+    elif len(p) == 3 and type(p[1]) is PrintStat:
+        p[0] = p[1]
+    elif len(p) == 4 and type(p[2]) is StatementList:
+        p[0] = p[2]
 
 
 def p_VARDECL(p: LexToken) -> None:
@@ -172,14 +200,15 @@ def p_PRINTSTAT(p: LexToken) -> None:
     """
     PRINTSTAT : PRINT EXPRESSION
     """
-    print(p[2])
+    expression = PrintStat(p[2])
+    p[0] = expression
 
 
 def p_READSTAT(p: LexToken) -> None:
     """
     READSTAT : READ LVALUE
     """
-    p[0] = input(p[2])
+    p[0] = p[2]
 
 
 def p_RETURNSTAT(p: LexToken) -> None:
@@ -227,10 +256,17 @@ def p_STATELIST(p: LexToken) -> None:
     """
     STATELIST : STATEMENT OPTIONAL_STATELIST
     """
-    if len(p) == 3:
-        p[0] = (p[1], p[2])
+    statement = p[1]
+    optional_rec = p[2]
+    if optional_rec is None:
+        p[0] = statement
     else:
-        p[0] = p[1]
+        if type(statement) is StatementList:
+            statement.value.append(optional_rec)
+            p[0] = statement
+        else:
+            optional_rec.value.extend([statement])
+            p[0] = optional_rec
 
 
 def p_OPTIONAL_STATELIST(p: LexToken) -> None:
@@ -238,7 +274,11 @@ def p_OPTIONAL_STATELIST(p: LexToken) -> None:
     OPTIONAL_STATELIST : STATELIST
                        | empty
     """
-    p[0] = p[1]
+    production = p[1]
+    if p[1]:
+        p[0] = StatementList([production])
+    else:
+        p[0] = None
 
 
 def p_ALLOCEXPRESSION(p: LexToken) -> None:

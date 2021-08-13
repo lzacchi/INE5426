@@ -11,6 +11,7 @@ import sys
 import ply.yacc as yacc
 from lexer import Lexer
 from output import print_tokens, print_symbol_table, InvalidTokenError, print_separator
+from pprint import pprint
 
 # Ply necessary imports
 from lexer import TOKENS as tokens
@@ -38,7 +39,7 @@ def main(src: str) -> None:
     parser = yacc.yacc()
     result = parser.parse(src)
     # result = parser.parse(src, debug=True)
-    print(result)
+    pprint(result)
 
 
 if __name__ == "__main__":
