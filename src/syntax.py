@@ -92,10 +92,10 @@ def p_DATATYPE(p: LexToken) -> None:
 
 def p_PARAMLIST(p: LexToken) -> None:
     """
-    PARAMLIST : DATATYPE LABEL COMMA PARAMLIST
-              | DATATYPE LABEL
+    PARAMLIST : DATATYPE LABEL PARAMLISTTMP
               | empty
     """
+    # CONFERIR A LÓGICA AQUI EMBAIXO PQ MUDOU
     if len(p) == 5:  # multiple parameters
         params = [param for param in p[4]]
         p[0] = (p[1], p[2], params)
@@ -103,6 +103,14 @@ def p_PARAMLIST(p: LexToken) -> None:
         p[0] = (p[1], p[2])
     else:
         p[0] = p[1]
+
+
+def p_PARAMLISTTMP(p: LexToken) -> None:
+    """
+    PARAMLISTTMP : COMMA PARAMLIST
+                 : empty
+    """
+    pass
 
 
 def p_STATEMENT(p: LexToken) -> None:
@@ -161,11 +169,31 @@ def p_OPTIONAL_VECTOR(p: LexToken) -> None:
 
 def p_ATRIB_RIGHT(p: LexToken) -> None:
     """
-    ATRIB_RIGHT : EXPRESSION
-                | ALLOCEXPRESSION
-                | FUNCCALL
+    ATRIB_RIGHT : ALLOCEXPRESSION
+                | EXPRESION_OR_FUNCCALL
     """
     p[0] = p[1]
+
+
+def p_EXPRESION_OR_FUNCCALL(p: LexToken) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL  : PLUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | MINUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | INTEGER_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | FLOATING_POINT_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | STRING_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | NULL RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION
+                            | LABEL FOLLOW_LABEL
+    """
+    pass
+
+
+def p_FOLLOW_LABEL(p: LexToken) -> None:
+    """
+    FOLLOW_LABEL : OPTIONAL_ALLOC_NUMEXPRESSION RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS_TERM OPTIONAL_REL_OP_NUMEXPRESSION | LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
+    """
+    pass
 
 
 def p_ATRIBSTAT(p: LexToken) -> None:
@@ -188,14 +216,22 @@ def p_FUNCCALL(p: LexToken) -> None:
 
 def p_PARAMLISTCALL(p: LexToken) -> None:
     """
-    PARAMLISTCALL : LABEL COMMA PARAMLISTCALL
-                  | LABEL
+    PARAMLISTCALL : LABEL PARAMLISTCALLTMP
                   | empty
     """
+    # CONFERIR
     if len(p) > 2:
         p[0] = (p[1], p[3])
     else:
         p[0] = p[1]
+
+
+def p_PARAMLISTCALLTMP(p: LexToken) -> None:
+    """
+    PARAMLISTCALLTMP : COMMA PARAMLISTCALL
+                     | empty
+    """
+    pass
 
 
 def p_PRINTSTAT(p: LexToken) -> None:
@@ -232,7 +268,7 @@ def p_IFSTAT(p: LexToken) -> None:
 
 def p_OPTIONAL_ELSE(p: LexToken) -> None:
     """
-    OPTIONAL_ELSE : ELSE LEFT_BRACKET STATEMENT RIGHT_BRACKET
+    OPTIONAL_ELSE : ELSE LEFT_BRACKET STATELIST RIGHT_BRACKET
                   | empty
     """
     if len(p) == 2:
