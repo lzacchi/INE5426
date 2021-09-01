@@ -12,28 +12,28 @@
 --            Apresentar o nome, notas, média e se passou na matéria ao final.
 
 -- Declaring and initialazing variables
-int n_students;
-n_students = 10;
+{
+  int n_students;
+  n_students = 10;
 
-int n_tests;
-n_tests = 4;
+  int n_tests;
+  n_tests = 4;
 
-string student_name;
-student_name = new string[n_students];
+  string student_name;
+  student_name = new string[n_students];
 
-float student_test_grade;
-student_test_grade = new float[n_students][n_tests];
+  float student_test_grade;
+  student_test_grade = new float[n_students][n_tests];
 
-int i;
+  int i;
 
-int birth_year;
-birth_year = new int[n_students];
+  int birth_year;
+  birth_year = new int[n_students];
 
-int base_year;
-base_year = 1990;
+  int base_year;
+  base_year = 1990;
 
 -- defining functions
-def initalize(){
   -- initialazing students
 
   student_name[0] = "Artur";
@@ -50,7 +50,7 @@ def initalize(){
 
   for (i = 0; i < n_students; i++){
     -- set birth year
-    birth_year[i] = base_year + i;
+    birth_year[i] = (base_year + i);
   }
 
   -- set random tests scores
@@ -61,10 +61,7 @@ def initalize(){
     }
 
   }
-  return;
-}
 
-def calculate_grades(){
   print("Calculating grades");
 
   float grades;
@@ -82,10 +79,7 @@ def calculate_grades(){
   }
 
   print("Done!");
-  return;
-}
 
-def print_grades(){
   print("Printing all students grades:");
 
   for (i=0; i < n_students; i++){
@@ -107,9 +101,5 @@ def print_grades(){
   }
   print("Ending program...")
   return;
-}
-
 -- run:
-initalize();
-calculate_grades();
-print_grades();
+}
