@@ -10,6 +10,7 @@
 # Lua language (https://www.lua.org/)
 
 import ply.lex as lex
+from ply.lex import Lexer
 from ply.lex import LexToken
 from typing import List
 from output import InvalidTokenError
@@ -62,7 +63,7 @@ TOKENS = list(RESERVED.values()) + [
 ]
 
 
-class Lexer(object):
+class Lexer(Lexer):
     reserved = RESERVED
     tokens = TOKENS
 
@@ -126,7 +127,6 @@ class Lexer(object):
         print(
             f"Input file({t.lineno}:{self.find_column(t)}) '{t.value[0]}' is an invalid character"
         )
-        t.lexer.skip(1)
         raise InvalidTokenError()
 
     def build(self, **kwargs: dict) -> None:
@@ -144,3 +144,6 @@ class Lexer(object):
                 break
             result.append(token)
         return result
+
+    def token(self):
+        return self.lexer.token()
