@@ -4,14 +4,18 @@
 # Authors: Artur Barichello
 #          Lucas Verdade
 #          Lucas Zacchi
+#
+# Arquivo utilizado para análise sintática e
+# análise semântica do código
 
 import re
 from ply import yacc
 from dataclasses import dataclass
 from collections import namedtuple
 from typing import Any, Dict, List, Tuple
-from output import VariableAlreadyDeclared
+from output import VariableAlreadyDeclared, InvalidBreakError
 from lexer import Lexer
+from data import ScopeStack, EntryTable, DataType
 
 
 @dataclass
@@ -40,11 +44,34 @@ lexer = Lexer()
 lexer.build()
 tokens = lexer.tokens
 
+# TODO:
+scopes = ScopeStack()
+
+# As definicoes abaixo lidam com as producoes da gramatica
+# e foram definidas seguindo o exemplo da documentação do
+# ply Yacc.
+#
+# Exemplo:
+# Get the token map from the lexer. This is required.
+#
+#     from calclex import tokens
+#
+#     def p_expression_plus(p):
+#         'expression : expression PLUS term'
+#         p[0] = p[1] + p[3]
+#
+# Para a entrega 3 foram adicionados alguns itens na gramática
+# para poder fazer a lógica de escopos.
+#
+# Referência: https://www.dabeaz.com/ply/ply.html#ply_nn24
+
+# --- Yacc rules ---
+
 
 def p_PROGRAM(p: yacc.YaccProduction) -> None:
     """
-    PROGRAM : STATEMENT
-            | FUNCLIST
+    PROGRAM : NEW_SCOPE STATEMENT
+            | NEW_SCOPE FUNCLIST
             | empty
     """
     pass
@@ -67,8 +94,43 @@ def p_FUNCLISTTMP(p: yacc.YaccProduction) -> None:
 
 def p_FUNCDEF(p: yacc.YaccProduction) -> None:
     """
-    FUNCDEF : FUNCTION_DECLARATION LABEL LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
+    FUNCDEF : FUNCTION_DECLARATION LABEL NEW_SCOPE LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
+    # TODO DONE CONFERIR:
+    scopes.pop()
+    current_scope = scopes.seek()
+
+    # Get function info to use in entry table
+    func_label = p[2]
+    func_line_number = p.lineno(2)
+
+    new_func = EntryTable(
+        label=func_label, datatype=DataType["func"], values=[], lineno=func_line_number
+    )
+
+    # Add function to current scope entry table
+    if current_scope is not None:
+        current_scope.add_entry(new_func)
+
+
+# New functions to handle scopes
+def p_LEFT_BRACKET(p: yacc.YaccProduction) -> None:
+    """
+    LEFT_BRACKET :
+    """
+    # TODO:
+    # save current scope
+    # Create new scope and pass current as father
+    # move scope to the new one
+    pass
+
+
+def p_RIGHT_BRACKET(p: yacc.YaccProduction) -> None:
+    """
+    RIGHT_BRACKET :
+    """
+    # TODO CONFERIR:
+    scopes.pop()
     pass
 
 
@@ -86,7 +148,21 @@ def p_PARAMLIST(p: yacc.YaccProduction) -> None:
     PARAMLIST : DATATYPE LABEL PARAMLISTTMP
               | empty
     """
-    pass
+    # Check if token is not empty
+    if len(p) > 2:
+        current_scope = scopes.seek()
+
+        paramlist_type = p[1]
+        paramlist_label = p[2]
+        paramlist_lineno = p.lineno(2)
+
+        paramlist = EntryTable(
+            label=paramlist_label,
+            datatype=paramlist_type,
+            values=[],
+            lineno=paramlist_lineno,
+        )
+        current_scope.add_entry(paramlist)
 
 
 def p_PARAMLISTTMP(p: yacc.YaccProduction) -> None:
@@ -106,17 +182,65 @@ def p_STATEMENT(p: yacc.YaccProduction) -> None:
               | RETURNSTAT SEMICOLON
               | IFSTAT
               | FORSTAT
-              | LEFT_BRACKET STATELIST RIGHT_BRACKET
-              | BREAK SEMICOLON
+              | STATELIST_STATEMENT
+              | BREAK_STATEMENT
               | SEMICOLON
     """
     pass
+
+
+def p_STATELIST_STATEMENT(p: yacc.YaccProduction) -> None:
+    """
+    STATELIST_STATEMENT : NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
+    """
+    # TODO CONFERIR:
+    scopes.pop()
+    pass
+
+
+def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
+    """
+    BREAK_STATEMENT : BREAK SEMICOLON
+    """
+    # TODO:
+    # handle scope break and check if there is a loop
+    current_scope = scopes.seek()
+
+    while True:
+        if current_scope.loop:
+            break
+
+        current_scope = current_scope.outer_scope
+
+        # If there is no outer scope then it's an error
+        if current_scope is not None:
+            # Get error line number and raise an error
+            error_lineno = p.lineno(2)
+            raise InvalidBreakError(error_lineno)
 
 
 def p_VARDECL(p: yacc.YaccProduction) -> None:
     """
     VARDECL : DATATYPE LABEL OPTIONAL_VECTOR
     """
+    # TODO:
+    # Variable info
+    variable_type = p[1]
+    variable_label = p[2]
+    variable_values = p[3]
+    variable_lineno = p.lineno(2)
+
+    variable = EntryTable(
+        label=variable_label,
+        datatype=variable_type,
+        values=variable_values,
+        lineno=variable_lineno,
+    )
+    current_scope = scopes.seek()
+    current_scope.add_entry(variable)
+    # save variable as entry table
+    # get current scope
+    # add variable to current scope
     pass
 
 
@@ -211,16 +335,19 @@ def p_RETURNSTAT(p: yacc.YaccProduction) -> None:
 
 def p_IFSTAT(p: yacc.YaccProduction) -> None:
     """
-    IFSTAT : IF LEFT_PARENTHESIS EXPRESSION RIGHT_PARENTHESIS STATEMENT OPTIONAL_ELSE
+    IFSTAT : IF LEFT_PARENTHESIS EXPRESSION RIGHT_PARENTHESIS NEW_SCOPE STATEMENT OPTIONAL_ELSE
     """
     pass
 
 
 def p_OPTIONAL_ELSE(p: yacc.YaccProduction) -> None:
     """
-    OPTIONAL_ELSE : ELSE LEFT_BRACKET STATELIST RIGHT_BRACKET
+    OPTIONAL_ELSE : ELSE NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
                   | empty
     """
+    # TODO CONFERIR:
+    if len(p) > 2:
+        scopes.pop()
     pass
 
 
@@ -364,10 +491,31 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
     pass
 
 
+def p_error(p: yacc.YaccProduction) -> None:
+    print(f"Syntax error at token {p}")
+
+
+# --- Semantic analysis ---
+
+
 def p_empty(p: yacc.YaccProduction) -> None:
     "empty :"
     pass
 
 
-def p_error(p: yacc.YaccProduction) -> None:
-    print(f"Syntax error at token {p}")
+def p_NEW_SCOPE(p: yacc.YaccProduction) -> None:
+    """
+    NEW_SCOPE :
+    """
+    create_scope(False)
+
+
+def p_NEW_SCOPE_LOOP(p: yacc.YaccProduction) -> None:
+    """
+    NEW_LOOP_SCOPE :
+    """
+    create_scope(True)
+
+
+def create_scope(loop: bool) -> None:
+    pass

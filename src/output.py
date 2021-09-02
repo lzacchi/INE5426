@@ -1,4 +1,3 @@
-#
 # output.py
 #
 # Authors: Artur Barichello
@@ -22,6 +21,10 @@ class InvalidTokenError(Exception):
 
 
 class VariableAlreadyDeclared(Exception):
+    pass
+
+
+class VariableInScopeError(Exception):
     pass
 
 
