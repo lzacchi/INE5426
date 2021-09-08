@@ -112,8 +112,13 @@ class Lexer(Lexer):
         t.value = int(t.value)
         return t
 
-    def t_newline(self, t: LexToken) -> LexToken:
+    def t_NEWLINE(self, t: LexToken) -> LexToken:
         r"\n+"
+        print("==================================")
+        print(f"self {self}")
+        print(f"t {t}")
+        print(f"t.lexer.lineno {t.lexer.lineno}")
+        print("==================================")
         t.lexer.lineno += len(t.value)
 
     # ---

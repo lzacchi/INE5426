@@ -12,10 +12,15 @@ from collections import deque
 from dataclasses import dataclass
 from typing import List, Optional, Union, Dict, Tuple, Any, Deque
 from output import VariableInScopeError
-from enum import Enum
+from enum import Enum, auto
 
 DataType = Enum("func", "int", "float", "string", "null")
-
+class DataType(Enum):
+    FUNC = auto()
+    INT = auto()
+    FLOAT = auto()
+    STRING = auto()
+    NULL = auto()
 
 @dataclass
 class TreeNode:

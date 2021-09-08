@@ -27,6 +27,9 @@ class VariableAlreadyDeclared(Exception):
 class VariableInScopeError(Exception):
     pass
 
+class InvalidBreakError(Exception):
+    pass
+
 
 def print_tokens(tokens: List) -> None:
     result = [(t.type, t.value) for t in tokens]

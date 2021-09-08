@@ -15,7 +15,7 @@ from collections import namedtuple
 from typing import Any, Dict, List, Tuple
 from output import VariableAlreadyDeclared, InvalidBreakError
 from lexer import Lexer
-from data import ScopeStack, EntryTable, DataType
+# from data import ScopeStack, EntryTable, DataType
 
 
 @dataclass
@@ -45,7 +45,7 @@ lexer.build()
 tokens = lexer.tokens
 
 # TODO:
-scopes = ScopeStack()
+# scopes = ScopeStack()
 
 # As definicoes abaixo lidam com as producoes da gramatica
 # e foram definidas seguindo o exemplo da documentação do
@@ -97,40 +97,20 @@ def p_FUNCDEF(p: yacc.YaccProduction) -> None:
     FUNCDEF : FUNCTION_DECLARATION LABEL NEW_SCOPE LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
     # TODO DONE CONFERIR:
-    scopes.pop()
-    current_scope = scopes.seek()
+    # scopes.pop()
+    # current_scope = scopes.seek()
 
-    # Get function info to use in entry table
-    func_label = p[2]
-    func_line_number = p.lineno(2)
+    # # Get function info to use in entry table
+    # func_label = p[2]
+    # func_line_number = p.lineno(2)
 
-    new_func = EntryTable(
-        label=func_label, datatype=DataType["func"], values=[], lineno=func_line_number
-    )
+    # new_func = EntryTable(
+    #     label=func_label, datatype=DataType["func"], values=[], lineno=func_line_number
+    # )
 
-    # Add function to current scope entry table
-    if current_scope is not None:
-        current_scope.add_entry(new_func)
-
-
-# New functions to handle scopes
-def p_LEFT_BRACKET(p: yacc.YaccProduction) -> None:
-    """
-    LEFT_BRACKET :
-    """
-    # TODO:
-    # save current scope
-    # Create new scope and pass current as father
-    # move scope to the new one
-    pass
-
-
-def p_RIGHT_BRACKET(p: yacc.YaccProduction) -> None:
-    """
-    RIGHT_BRACKET :
-    """
-    # TODO CONFERIR:
-    scopes.pop()
+    # # Add function to current scope entry table
+    # if current_scope is not None:
+    #     current_scope.add_entry(new_func)
     pass
 
 
@@ -149,20 +129,20 @@ def p_PARAMLIST(p: yacc.YaccProduction) -> None:
               | empty
     """
     # Check if token is not empty
-    if len(p) > 2:
-        current_scope = scopes.seek()
+    # if len(p) > 2:
+    #     current_scope = scopes.seek()
 
-        paramlist_type = p[1]
-        paramlist_label = p[2]
-        paramlist_lineno = p.lineno(2)
+    #     paramlist_type = p[1]
+    #     paramlist_label = p[2]
+    #     paramlist_lineno = p.lineno(2)
 
-        paramlist = EntryTable(
-            label=paramlist_label,
-            datatype=paramlist_type,
-            values=[],
-            lineno=paramlist_lineno,
-        )
-        current_scope.add_entry(paramlist)
+    #     paramlist = EntryTable(
+    #         label=paramlist_label,
+    #         datatype=paramlist_type,
+    #         values=[],
+    #         lineno=paramlist_lineno,
+    #     )
+    #     current_scope.add_entry(paramlist)
 
 
 def p_PARAMLISTTMP(p: yacc.YaccProduction) -> None:
@@ -194,7 +174,7 @@ def p_STATELIST_STATEMENT(p: yacc.YaccProduction) -> None:
     STATELIST_STATEMENT : NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
     # TODO CONFERIR:
-    scopes.pop()
+    # scopes.pop()
     pass
 
 
@@ -204,19 +184,19 @@ def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
     """
     # TODO:
     # handle scope break and check if there is a loop
-    current_scope = scopes.seek()
+    # current_scope = scopes.seek()
 
-    while True:
-        if current_scope.loop:
-            break
+    # while True:
+    #     if current_scope.loop:
+    #         break
 
-        current_scope = current_scope.outer_scope
+    #     current_scope = current_scope.outer_scope
 
-        # If there is no outer scope then it's an error
-        if current_scope is not None:
-            # Get error line number and raise an error
-            error_lineno = p.lineno(2)
-            raise InvalidBreakError(error_lineno)
+    #     # If there is no outer scope then it's an error
+    #     if current_scope is not None:
+    #         # Get error line number and raise an error
+    #         error_lineno = p.lineno(2)
+    #         raise InvalidBreakError(error_lineno)
 
 
 def p_VARDECL(p: yacc.YaccProduction) -> None:
@@ -225,19 +205,19 @@ def p_VARDECL(p: yacc.YaccProduction) -> None:
     """
     # TODO:
     # Variable info
-    variable_type = p[1]
-    variable_label = p[2]
-    variable_values = p[3]
-    variable_lineno = p.lineno(2)
+    # variable_type = p[1]
+    # variable_label = p[2]
+    # variable_values = p[3]
+    # variable_lineno = p.lineno(2)
 
-    variable = EntryTable(
-        label=variable_label,
-        datatype=variable_type,
-        values=variable_values,
-        lineno=variable_lineno,
-    )
-    current_scope = scopes.seek()
-    current_scope.add_entry(variable)
+    # variable = EntryTable(
+    #     label=variable_label,
+    #     datatype=variable_type,
+    #     values=variable_values,
+    #     lineno=variable_lineno,
+    # )
+    # current_scope = scopes.seek()
+    # current_scope.add_entry(variable)
     # save variable as entry table
     # get current scope
     # add variable to current scope
