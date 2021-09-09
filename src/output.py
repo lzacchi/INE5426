@@ -4,6 +4,7 @@
 #          Lucas Verdade
 #          Lucas Zacchi
 #
+# Helper functions to output data into terminal
 #
 
 from ply.lex import LexToken
@@ -14,6 +15,9 @@ from collections import namedtuple
 
 from itertools import groupby
 from operator import itemgetter
+
+
+# --- Compiler generated errors ---
 
 
 class InvalidTokenError(Exception):
@@ -27,8 +31,16 @@ class VariableAlreadyDeclared(Exception):
 class VariableInScopeError(Exception):
     pass
 
+
 class InvalidBreakError(Exception):
     pass
+
+
+class InvalidBinaryOperation(Exception):
+    pass
+
+
+# --- Output helper functions ---
 
 
 def print_tokens(tokens: List) -> None:

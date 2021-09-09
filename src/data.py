@@ -14,13 +14,14 @@ from typing import List, Optional, Union, Dict, Tuple, Any, Deque
 from output import VariableInScopeError
 from enum import Enum, auto
 
-DataType = Enum("func", "int", "float", "string", "null")
+
 class DataType(Enum):
     FUNC = auto()
     INT = auto()
     FLOAT = auto()
     STRING = auto()
     NULL = auto()
+
 
 @dataclass
 class TreeNode:
@@ -83,7 +84,7 @@ class Scope:
         self.entry_table.append(entry)
 
     def add_inner_scope(self, scope: Any) -> None:
-        pass
+        self.inner_scopes.append(scope)
 
     def contains_var(self, var_label: str) -> Tuple[bool, int]:
         for entry in self.entry_table:
@@ -106,7 +107,7 @@ class ScopeStack:
     def __len__(self) -> int:
         return len(self.stack)
 
-    def isEmpty(self) -> bool:
+    def is_empty(self) -> bool:
         return True if len(self.stack) == 0 else False
 
     def length(self) -> int:
@@ -119,4 +120,7 @@ class ScopeStack:
         self.stack.pop()
 
     def seek(self) -> Optional[Scope]:
-        return self.stack[-1]
+        if self.is_empty():
+            return None
+        else:
+            self.stack[-1]

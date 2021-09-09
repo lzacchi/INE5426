@@ -37,9 +37,11 @@ def main(src: str) -> None:
     # print_separator()
 
     print("Executing yacc")
-    parser = yacc.yacc(start="PROGRAM", check_recursion=False)
-    # result = parser.parse(src) # non-debug mode
-    result = parser.parse(src, debug=True, lexer=lexer)
+    # TODO: check recursion true or false?
+    parser = yacc.yacc(start="PROGRAM", check_recursion=True)
+    # debug = True # uncomment for debug mode
+    debug = False
+    result = parser.parse(src, debug=debug, lexer=lexer)
     pprint(result)
 
 
