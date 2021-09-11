@@ -56,7 +56,7 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
     """
     p[0] = {"scopes": scopes.pop().as_dict(), "expressions": expressions}
     # Stack must be empty otherwise we have a missing scope error
-    assert scopes.is_mepty() == True
+    assert scopes.is_empty() == True
 
 
 def p_FUNCLIST(p: yacc.YaccProduction) -> None:
@@ -256,11 +256,11 @@ def p_ATRIBSTAT(p: yacc.YaccProduction) -> None:
 
 
 # TODO: remove this?
-def p_FUNCCALL(p: yacc.YaccProduction) -> None:
-    """
-    FUNCCALL : LABEL LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
-    """
-    pass
+# def p_FUNCCALL(p: yacc.YaccProduction) -> None:
+#     """
+#     FUNCCALL : LABEL LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
+#     """
+#     pass
 
 
 def p_PARAMLISTCALL(p: yacc.YaccProduction) -> None:
@@ -392,26 +392,26 @@ def p_REL_OP_LESSER_THAN(p: yacc.YaccProduction) -> None:
     pass
 
 
-def p_REL_OP_GREATER_THAN(p: yacc.YaccProduction):
+def p_REL_OP_GREATER_THAN(p: yacc.YaccProduction) -> None:
     """REL_OP : GREATER_THAN"""
     pass
 
 
-def p_REL_OP_LOWER_OR_EQUAL_THAN(p: yacc.YaccProduction):
+def p_REL_OP_LOWER_OR_EQUAL_THAN(p: yacc.YaccProduction) -> None:
     """REL_OP : LESS_OR_EQUAL_THAN"""
     pass
 
 
-def p_REL_OP_GREATER_OR_EQUAL_THAN(p: yacc.YaccProduction):
+def p_REL_OP_GREATER_OR_EQUAL_THAN(p: yacc.YaccProduction) -> None:
     """REL_OP : GREATER_OR_EQUAL_THAN"""
 
 
-def p_REL_OP_EQUAL(p: yacc.YaccProduction):
+def p_REL_OP_EQUAL(p: yacc.YaccProduction) -> None:
     """REL_OP : EQUAL"""
     pass
 
 
-def p_REL_OP_NOT_EQUAL(p: yacc.YaccProduction):
+def p_REL_OP_NOT_EQUAL(p: yacc.YaccProduction) -> None:
     """REL_OP : NOT_EQUAL"""
     pass
 
@@ -429,7 +429,7 @@ def p_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
             p[1]["node"], p[2]["node"], p[2]["operation"], p.lineno(1)
         )
         p[0] = {
-            "node": Node(p[1]["node"], p[2]["node"], p[2]["operation"], result_type)
+            "node": TreeNode(p[1]["node"], p[2]["node"], p[2]["operation"], result_type)
         }
 
 
@@ -446,7 +446,9 @@ def p_RECURSIVE_MINUS_OR_PLUS(p: yacc.YaccProduction) -> None:
             p[2]["node"], p[3]["node"], p[3]["operation"], p.lineno(1)
         )
         p[0] = {
-            "node": Node(p[2]["node"], p[3]["node"], p[3]["operation"], result_type),
+            "node": TreeNode(
+                p[2]["node"], p[3]["node"], p[3]["operation"], result_type
+            ),
             "operation": p[1]["operation"],
         }
     else:
@@ -614,7 +616,7 @@ def create_scope(loop: bool) -> None:
     scopes.push(new)
 
 
-def get_variable_type(label, lineno):
+def get_variable_type(label, lineno) -> Any:
     """
     Get variable type
     Used during TreeNode construction in LVALUEs"""

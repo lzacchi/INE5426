@@ -116,11 +116,11 @@ class ScopeStack:
     def push(self, x: Scope) -> None:
         self.stack.append(x)
 
-    def pop(self) -> None:
-        self.stack.pop()
+    def pop(self) -> Scope:
+        return self.stack.pop()
 
     def seek(self) -> Optional[Scope]:
         if self.is_empty():
             return None
         else:
-            self.stack[-1]
+            return self.stack[-1]
