@@ -124,7 +124,8 @@ def p_PARAMLIST(p: yacc.YaccProduction) -> None:
             values=[],
             lineno=paramlist_lineno,
         )
-        current_scope.add_entry(paramlist)
+        if current_scope is not None:
+            current_scope.add_entry(paramlist)
 
 
 def p_PARAMLISTTMP(p: yacc.YaccProduction) -> None:
@@ -169,16 +170,18 @@ def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
     current_scope = scopes.seek()
 
     while True:
-        if current_scope.loop:
+        if current_scope is None:
             break
+        elif current_scope.loop:
+            break
+        else:
+            current_scope = current_scope.outer_scope
 
-        current_scope = current_scope.outer_scope
-
-        # If there is no outer scope then it's an error
-        if current_scope is not None:
-            # Get error line number and raise an error
-            error_lineno = p.lineno(2)
-            raise InvalidBreakError(error_lineno)
+            # If there is no outer scope then it's an error
+            if current_scope is not None:
+                # Get error line number and raise an error
+                error_lineno = p.lineno(2)
+                raise InvalidBreakError(error_lineno)
 
 
 def p_VARDECL(p: yacc.YaccProduction) -> None:
@@ -202,7 +205,8 @@ def p_VARDECL(p: yacc.YaccProduction) -> None:
     # get current scope
     current_scope = scopes.seek()
     # add variable to current scope
-    current_scope.add_entry(variable)
+    if current_scope is not None:
+        current_scope.add_entry(variable)
     pass
 
 
@@ -223,6 +227,7 @@ def p_ATRIB_RIGHT(p: yacc.YaccProduction) -> None:
     ATRIB_RIGHT : ALLOCEXPRESSION
                 | EXPRESSION_OR_FUNCCALL
     """
+
     pass
 
 
@@ -346,7 +351,6 @@ def p_ALLOCEXPRESSION(p: yacc.YaccProduction) -> None:
     """
     numexpr = p[4]
     expressions.append((numexpr["node"], p.lineno(1)))
-    pass
 
 
 def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
@@ -354,12 +358,12 @@ def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
     OPTIONAL_ALLOC_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
                                  | empty
     """
-    numexpr = p[2]
-    numexpr_node = numexpr["node"]
-    optional_numexpr = p[4]
     if len(p) < 3:
         p[0] = ""
     else:
+        numexpr = p[2]
+        numexpr_node = numexpr["node"]
+        optional_numexpr = p[4]
         expressions.append((numexpr_node, p.lineno(1)))
         p[0] = f"[{str(numexpr)}]{optional_numexpr}"
 
@@ -377,11 +381,11 @@ def p_OPTIONAL_REL_OP_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
     OPTIONAL_REL_OP_NUMEXPRESSION : REL_OP NUMEXPRESSION
                                   | empty
     """
-    numexpr = p[2]
-    numexpr_node = numexpr["node"]
     if len(p) < 3:
         pass
     else:
+        numexpr = p[2]
+        numexpr_node = numexpr["node"]
         expressions.append((numexpr_node, p.lineno(1)))
 
 
@@ -442,7 +446,7 @@ def p_RECURSIVE_MINUS_OR_PLUS(p: yacc.YaccProduction) -> None:
         p[0] = None  # no recursion
     elif p[3]:
         # more recursions
-        result_type = check_type(
+        result_type = check_valid_operation(
             p[2]["node"], p[3]["node"], p[3]["operation"], p.lineno(1)
         )
         p[0] = {
@@ -571,7 +575,7 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
             None,
             None,
             label + optional_alloc_numexpr,
-            result_type=get_variable_type(label, p.lineno(1)),
+            res_type=get_variable_type(label, p.lineno(1)),
         )
     }
 
@@ -616,7 +620,7 @@ def create_scope(loop: bool) -> None:
     scopes.push(new)
 
 
-def get_variable_type(label, lineno) -> Any:
+def get_variable_type(label: str, lineno: int) -> Any:
     """
     Get variable type
     Used during TreeNode construction in LVALUEs"""

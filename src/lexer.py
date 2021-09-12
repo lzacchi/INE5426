@@ -12,7 +12,7 @@
 import ply.lex as lex
 from ply.lex import Lexer
 from ply.lex import LexToken
-from typing import List
+from typing import List, Any
 from output import InvalidTokenError
 
 RESERVED = {
@@ -90,7 +90,6 @@ class Lexer(Lexer):
     t_LEFT_SQUARE_BRACKET = r"\["
     t_RIGHT_SQUARE_BRACKET = r"\]"
 
-    t_ignore_COMMENT = r"--.*"  # updated
     t_ignore = " \t"  # updated
     t_NULL = r"nil"  # updated
     t_ATTRIBUTION = r"="
@@ -114,11 +113,6 @@ class Lexer(Lexer):
 
     def t_NEWLINE(self, t: LexToken) -> LexToken:
         r"\n+"
-        print("==================================")
-        print(f"self {self}")
-        print(f"t {t}")
-        print(f"t.lexer.lineno {t.lexer.lineno}")
-        print("==================================")
         t.lexer.lineno += len(t.value)
 
     # ---
@@ -129,17 +123,17 @@ class Lexer(Lexer):
 
     def t_error(self, t: LexToken) -> None:
         # Simulating a Lua error message
-        print(
+        raise InvalidTokenError(
             f"Input file({t.lineno}:{self.find_column(t)}) '{t.value[0]}' is an invalid character"
         )
-        raise InvalidTokenError()
 
-    def build(self, **kwargs: dict) -> None:
+    def build(self, **kwargs: Any) -> None:
         self.lexer = lex.lex(module=self, **kwargs)
 
-    def input(self, src: str, **kwargs: int) -> None:
+    def input(self, src: str, **kwargs: Any) -> None:
         self.src = src
-        self.lexer.input(src)
+        self.lexer.input(src, **kwargs)
+        self.lexer.lineno = 1
 
     def token_list(self) -> List:
         result: List = []
@@ -150,5 +144,5 @@ class Lexer(Lexer):
             result.append(token)
         return result
 
-    def token(self):
+    def token(self) -> Any:
         return self.lexer.token()
