@@ -15,7 +15,7 @@ from collections import namedtuple
 from typing import Any, Dict, List, Tuple
 from output import VariableAlreadyDeclared, InvalidBreakError
 from lexer import Lexer
-from data import ScopeStack, EntryTable, DataType, Scope, TreeNode
+from data import ScopeStack, EntryTable, Scope, TreeNode
 from typecheck import check_valid_operation
 
 
@@ -56,7 +56,7 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
     """
     p[0] = {"scopes": scopes.pop().as_dict(), "expressions": expressions}
     # Stack must be empty otherwise we have a missing scope error
-    assert scopes.is_empty() == True
+    print(scopes.is_empty())
 
 
 def p_FUNCLIST(p: yacc.YaccProduction) -> None:
@@ -231,24 +231,176 @@ def p_ATRIB_RIGHT(p: yacc.YaccProduction) -> None:
     pass
 
 
-def p_EXPRESSION_OR_FUNCCALL(p: yacc.YaccProduction) -> None:
+def p_funccall_or_exp_plus(p: yacc.YaccProduction) -> None:
     """
-    EXPRESSION_OR_FUNCCALL  : PLUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | MINUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | INTEGER_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | FLOATING_POINT_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | STRING_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | NULL RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                            | LABEL FOLLOW_LABEL
+    EXPRESSION_OR_FUNCCALL : PLUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+                           | MINUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+    """
+    right_node = p[2]["node"]
+    if p[1] == "-":
+        right_node.value *= -1
+
+    if p[3]:
+        result_type = check_valid_operation(
+            p[3]["node"], right_node, p[3]["operation"], p.lineno(1)
+        )
+        right_node = TreeNode(p[3]["node"], right_node, p[3]["operation"], result_type)
+
+    if p[4]:
+        result_type = check_valid_operation(
+            p[4]["node"], right_node, p[4]["operation"], p.lineno(1)
+        )
+        right_node = TreeNode(p[4]["node"], right_node, p[4]["operation"], result_type)
+
+    expressions.append(right_node)
+
+
+def p_funccal_or_exp_int_const(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : INTEGER_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+    """
+    node = TreeNode(None, None, p[1], "int")
+
+    if p[2]:
+        result_type = check_valid_operation(
+            node, p[2]["node"], p[2]["operation"], p.lineno(2)
+        )
+        node = TreeNode(node, p[2]["node"], p[2]["operation"], result_type)
+
+    if p[3]:
+        result_type = check_valid_operation(
+            node, p[3]["node"], p[3]["operation"], p.lineno(2)
+        )
+        node = TreeNode(node, p[3]["node"], p[3]["operation"], result_type)
+
+    p[0] = {"node": node}
+
+    expressions.append((node, p.lineno(2)))
+
+
+def p_funccal_or_exp_float_const(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : FLOATING_POINT_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+    """
+    node = TreeNode(None, None, p[1], "float")
+
+    if p[2]:
+        result_type = check_valid_operation(
+            node, p[2]["node"], p[2]["operation"], p.lineno(2)
+        )
+        node = TreeNode(node, p[2]["node"], p[2]["operation"], result_type)
+
+    if p[3]:
+        result_type = check_valid_operation(
+            node, p[3]["node"], p[3]["operation"], p.lineno(2)
+        )
+        node = TreeNode(node, p[3]["node"], p[3]["operation"], result_type)
+
+    p[0] = {"node": node}
+
+    expressions.append((node, p.lineno(2)))
+
+
+def p_funccal_or_exp_string_const(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : STRING_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+    """
+    node = TreeNode(None, None, p[1], "string")
+
+    if p[2]:
+        result_type = check_valid_operation(
+            node, p[2]["node"], p[2]["operation"], p.lineno(1)
+        )
+        node = TreeNode(node, p[2]["node"], p[2]["operation"], result_type)
+
+    if p[3]:
+        result_type = check_valid_operation(
+            node, p[3]["node"], p[3]["operation"], p.lineno(1)
+        )
+        node = TreeNode(node, p[3]["node"], p[3]["operation"], result_type)
+
+    p[0] = {"node": node}
+
+    expressions.append((node, p.lineno(1)))
+
+
+def p_funccall_or_exp_null(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : NULL RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
     pass
 
 
-def p_FOLLOW_LABEL(p: yacc.YaccProduction) -> None:
+def p_funccall_or_exp_parentesis(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
+    """
+    node = p[2]["node"]
+
+    if p[4]:
+        result_type = check_valid_operation(
+            node, p[4]["node"], p[4]["operation"], p.lineno(1)
+        )
+        node = TreeNode(node, p[4]["node"], p[4]["operation"], result_type)
+
+    if p[5]:
+        result_type = check_valid_operation(
+            node, p[5]["node"], p[5]["operation"], p.lineno(1)
+        )
+        node = TreeNode(node, p[5]["node"], p[5]["operation"], result_type)
+
+    p[0] = {"node": node}
+
+    expressions.append((node, p.lineno(1)))
+
+
+def p_funccall_or_exp_ident(p: yacc.YaccProduction) -> None:
+    """
+    EXPRESSION_OR_FUNCCALL : LABEL FOLLOW_LABEL
+    """
+    node = TreeNode(None, None, p[1], get_variable_type(p[1], p.lineno(1)))
+
+    if p[2] is None or p[2]["node"] == None:
+        return
+
+    if p[2]:
+        node.value += p[2]["vec_access"]
+        result_type = check_valid_operation(
+            node, p[2]["node"], p[2]["operation"], p.lineno(1)
+        )
+        node = TreeNode(node, p[2]["node"], p[2]["operation"], result_type)
+
+        expressions.append((node, p.lineno(1)))
+
+
+def p_follow_ident_alloc(p: yacc.YaccProduction) -> None:
     """
     FOLLOW_LABEL : OPTIONAL_ALLOC_NUMEXPRESSION RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
-                 | LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
+    """
+    node = None
+    operation = ""
+
+    if p[2]:
+        node = p[2]["node"]
+        operation = p[2]["operation"]
+
+    if p[3]:
+        if node is None:
+            node = p[3]["node"]
+            operation = p[3]["operation"]
+
+        else:
+            result_type = check_valid_operation(
+                node, p[3]["node"], p[3]["operation"], p.lineno(0)
+            )
+            node = TreeNode(node, p[3]["node"], p[3]["operation"], result_type)
+
+    p[0] = {"vec_access": p[1], "node": node, "operation": operation}
+
+
+def p_FOLLOW_LABEL(p: yacc.YaccProduction) -> None:
+    """
+    FOLLOW_LABEL : LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
     """
     pass
 
@@ -373,7 +525,8 @@ def p_EXPRESSION(p: yacc.YaccProduction) -> None:
     EXPRESSION : NUMEXPRESSION OPTIONAL_REL_OP_NUMEXPRESSION
     """
     numexpr = p[1]
-    expressions.append((numexpr["node"], p.lineno(1)))
+    numexpr_node = numexpr["node"]
+    expressions.append((numexpr_node, p.lineno(1)))
 
 
 def p_OPTIONAL_REL_OP_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
@@ -430,10 +583,12 @@ def p_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
         p[0] = term
     else:
         result_type = check_valid_operation(
-            p[1]["node"], p[2]["node"], p[2]["operation"], p.lineno(1)
+            term["node"], recursive["node"], recursive["operation"], p.lineno(1)
         )
         p[0] = {
-            "node": TreeNode(p[1]["node"], p[2]["node"], p[2]["operation"], result_type)
+            "node": TreeNode(
+                term["node"], recursive["node"], recursive["operation"], result_type
+            )
         }
 
 
@@ -472,11 +627,23 @@ def p_TERM(p: yacc.YaccProduction) -> None:
     """
     TERM : UNARYEXPR RECURSIVE_UNARYEXPR
     """
+    unaryexpr = p[1]
+    unaryexpr_node = unaryexpr["node"]
     recursion = p[2]
     if recursion:
-        pass
+        recursion_node = recursion["node"]
+        recursion_operation = recursion["operation"]
+        result_type = check_valid_operation(
+            unaryexpr_node, recursion_node, recursion_operation, p.lineno(1)
+        )
+        p[0] = {
+            "node": TreeNode(
+                unaryexpr_node, recursion_node, recursion_operation, result_type
+            ),
+            "operation": recursion_operation,
+        }
     else:
-        pass
+        p[0] = {"node": unaryexpr_node}
 
 
 # Tuple(operator, term)
@@ -559,9 +726,10 @@ def p_FACTOR_EXPR(p: yacc.YaccProduction) -> None:
     """
     FACTOR : LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS
     """
-    p[0] = p[2]
-
-    expressions.append((p[2]["node"], p.lineno(1)))
+    numexpr = p[2]
+    numexpr_node = numexpr["node"]
+    p[0] = numexpr
+    expressions.append((numexpr_node, p.lineno(1)))
 
 
 def p_LVALUE(p: yacc.YaccProduction) -> None:

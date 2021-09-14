@@ -1,0 +1,42 @@
+Executing yacc
+True
+Syntax error at token LexToken(PRINT,'print',2,10)
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+True
+Syntax error at token LexToken(LABEL,'n_students',17,478)
+True
+False
+Syntax error at token LexToken(STRING,'string',22,529)
+False
+Syntax error at token LexToken(FLOATING_POINT,'float',25,594)
+False
+Syntax error at token LexToken(INTEGER,'int',28,678)
+False
+Syntax error at token LexToken(LABEL,'birth_year',31,706)
+False
+False
+Syntax error at token LexToken(PRINT,'print',36,781)
+False
+False
+False
+False
+False
+False
+False
+False
+False
+False
+False
+False
+False
+Syntax error at token LexToken(LABEL,'i',51,1170)
