@@ -13,9 +13,9 @@ from ply import yacc
 from dataclasses import dataclass
 from collections import namedtuple
 from typing import Any, Dict, List, Tuple
-from output import VariableAlreadyDeclared, InvalidBreakError
+from output import VariableAlreadyDeclared, InvalidBreakError, VariableNotDeclared
 from lexer import Lexer
-from data import ScopeStack, EntryTable, Scope, TreeNode
+from data import ScopeStack, EntryTable, Scope, TreeNode, DataType
 from typecheck import check_valid_operation
 
 
@@ -57,6 +57,7 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
     p[0] = {"scopes": scopes.pop().as_dict(), "expressions": expressions}
     # Stack must be empty otherwise we have a missing scope error
     print(scopes.is_empty())
+    assert scopes.is_empty()
 
 
 def p_FUNCLIST(p: yacc.YaccProduction) -> None:
@@ -102,7 +103,7 @@ def p_DATATYPE(p: yacc.YaccProduction) -> None:
              | FLOATING_POINT
              | STRING
     """
-    pass
+    p[0] = p[1]
 
 
 def p_PARAMLIST(p: yacc.YaccProduction) -> None:
@@ -227,7 +228,6 @@ def p_ATRIB_RIGHT(p: yacc.YaccProduction) -> None:
     ATRIB_RIGHT : ALLOCEXPRESSION
                 | EXPRESSION_OR_FUNCCALL
     """
-
     pass
 
 
@@ -738,12 +738,13 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
     """
     label = p[1]
     optional_alloc_numexpr = p[2]
+    res_type = get_variable_type(label, p.lineno(1))
     p[0] = {
         "node": TreeNode(
             None,
             None,
             label + optional_alloc_numexpr,
-            res_type=get_variable_type(label, p.lineno(1)),
+            res_type=res_type,
         )
     }
 
@@ -792,4 +793,14 @@ def get_variable_type(label: str, lineno: int) -> Any:
     """
     Get variable type
     Used during TreeNode construction in LVALUEs"""
-    pass
+    scope = scopes.seek()
+    while True:
+        for entry in scope.entry_table:
+            if entry.label == label:
+                return entry.datatype
+
+        scope = scope.outer_scope
+        if scope is None:
+            break
+
+    raise VariableNotDeclared(f"Variable not declared '{label}' lineno: {lineno})")

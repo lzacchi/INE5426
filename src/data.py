@@ -15,12 +15,12 @@ from output import VariableInScopeError
 from enum import Enum, auto
 
 
-# class DataType(Enum):
-#     FUNC = auto()
-#     INT = auto()
-#     FLOAT = auto()
-#     STRING = auto()
-#     NULL = auto()
+class DataType(Enum):
+    FUNC = auto()
+    INT = auto()
+    FLOAT = auto()
+    STRING = auto()
+    NULL = auto()
 
 
 @dataclass
@@ -56,7 +56,7 @@ class TreeNode:
 @dataclass
 class EntryTable:
     label: str
-    datatype: str
+    datatype: DataType
     values: List[int]
     lineno: int
 
@@ -93,7 +93,6 @@ class Scope:
         for entry in self.entry_table:
             if entry.label == var_label:
                 return True, entry.lineno
-
         return False, 0
 
     def as_dict(self) -> Dict:

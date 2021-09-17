@@ -28,6 +28,10 @@ class VariableAlreadyDeclared(Exception):
     pass
 
 
+class VariableNotDeclared(Exception):
+    pass
+
+
 class VariableInScopeError(Exception):
     pass
 
@@ -62,8 +66,9 @@ def print_symbol_table(tokens: List) -> None:
             else:
                 symbol_table[token[3]] = (token[0], token[1], [])
 
-    headers = ["Value", "Index", "Declaration (line)", "Referenced (lines)"]
+    headers = ["Label", "Index", "Declaration (line)", "Referenced (lines)"]
     print(tabulate([(k,) + v for k, v in symbol_table.items()], headers=headers))
+    print_separator()
 
 
 def print_separator() -> None:

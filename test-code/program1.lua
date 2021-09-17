@@ -1,17 +1,3 @@
-print "";
-print "program1.lua";
-print "";
-print " Authors: Artur Barichello";
-print "          Lucas Verdade";
-print "          Lucas Zacchi";
-print " ";
-
-print " Exemplo 1";
-print " Algoritmo: Declarar e inicializar os alunos de uma turma.";
-print "            Gerar as notas dos testes pra cada um e calcular a média.";
-print "            Apresentar o nome, notas, média e se passou na matéria ao final.";
-
-print " Declaring and initialazing variables";
 {
   int n_students;
   n_students = 10;
@@ -48,16 +34,16 @@ print " Declaring and initialazing variables";
   student_name[9] = "Francisco";
 
 
-  for (i = 0; i < n_students; i++){
-    print " set birth year";
-    birth_year[i] = (base_year + i);
+  for (i = 0; i < n_students; i=i+1){
+    print "set birth year";
+    birth_year[i] = (base_year);
   }
 
-  print " set random tests scores";
+  print "set random tests scores";
   int j;
-  for (i=0; i < n_students; i++){
-    for (j=0; j < n_tests; j++){
-      student_test_grade[i][j] = (n_tests * 5.75 + i) % 10; print " set random score";
+  for (i=0; i < n_students; i=i+1){
+    for (j=0; j < n_tests; j=j+1){
+      student_test_grade[i][j] = (n_tests * 6);
     }
 
   }
@@ -67,10 +53,10 @@ print " Declaring and initialazing variables";
   float grades;
   grades = new float[n_students];
 
-  for (i=0; i < n_students; i++){
+  for (i=0; i < n_students; i=i+1){
     float sum;
     sum = 0;
-    for (j=0; j < n_tests; j++){
+    for (j=0; j < n_tests; j=j+1){
       sum = sum + student_test_grade[i][j];
     }
 
@@ -82,24 +68,32 @@ print " Declaring and initialazing variables";
 
   print "Printing all students grades:";
 
-  for (i=0; i < n_students; i++){
-    print "print("------------------");";
-    print "STUDENT: " + student_name[i];
-    for (j=0; j < n_tests; j++){
-      print "Test " + j + " score: " + student_test_grade[i][j];
+  for (i=0; i < n_students; i=i+1){
+    print "------------------------";
+    print "STUDENT: " ;
+    print  student_name[i];
+    for (j=0; j < n_tests; j=j+1){
+      print "Test ";
+      print j;
+      print " score: ";
+      print student_test_grade[i][j];
     }
 
-    print "Grade: "+ grades[i];
+    print "Grade: ";
+    print grades[i];
 
-    if (grades[i] >= 5.75){
-      print "Congratulations, "+ student_name[i]  +". You are approved!";
+    if (grades[i] >= 6){
+      print "Congratulations, ";
+      print student_name[i];
+      print ". You are approved!";
     } else {
-      print "Sorry, " + student_name[i] + " :( you are not approved. Try again next year :D";
+      print "Sorry, ";
+      print student_name[i];
+      print " :( you are not approved. Try again next year :D";
     }
 
     print "----------------------";
   }
   print "Ending program...";
   return;
-print " run:";
 }

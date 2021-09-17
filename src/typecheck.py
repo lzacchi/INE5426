@@ -49,12 +49,12 @@ def check_valid_operation(
         raise InvalidBinaryOperation(f"invalid operation {operation}")
     result = list(
         filter(
-            lambda op: op["left"] == left.res_type == right.res_type,
+            lambda op: op["left"] == left.res_type and op["right"] == right.res_type,
             op_list,
         )
     )
     if len(result) == 0:
         raise InvalidBinaryOperation(
-            f"can't operate {left.res_type} with {right.res_type}"
+            f"\nCan't operate [{left.res_type}] ({left.value}) '{operation}' [{right.res_type}] ({right.value})] at line {lineno}"
         )
     return result[0]["result"]

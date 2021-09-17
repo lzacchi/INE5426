@@ -33,7 +33,7 @@ def main(src: str) -> None:
 
     # Prints da entrega 1:
     # print_tokens(token_list)
-    # print_symbol_table(token_list)
+    print_symbol_table(token_list)
     # print_separator()
 
     print("Executing yacc")
