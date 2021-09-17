@@ -37,16 +37,16 @@ run:
 	@echo -e "${CCGREEN}Executing all three programs... ${CCEND}"
 
 	@echo -e "${CCGREEN}Executing main program1.lua${CCEND}"
-	@poetry run python src/main.py ${program_1} > output/lex-program1.txt
+	@poetry run python src/main.py ${program_1} > output/program1.txt
 
 	@echo -e "${CCGREEN}Executing main program2.lua${CCEND}"
-	@poetry run python src/main.py ${program_2} > output/lex-program2.txt
+	@poetry run python src/main.py ${program_2} > output/program2.txt
 
 	@echo -e "${CCGREEN}Executing main program3.lua${CCEND}"
-	@poetry run python src/main.py ${program_3} > output/lex-program3.txt
+	@poetry run python src/main.py ${program_3} > output/program3.txt
 
 	@echo -e "${CCGREEN}Executing main program4.lua${CCEND}"
-	@poetry run python src/main.py ${program_4} > output/lex-program4.txt
+	@poetry run python src/main.py ${program_4} > output/program4.txt
 
 	@echo -e "${CCGREEN}Done! Execution outputs are located in the output directory.${CCEND}"
 

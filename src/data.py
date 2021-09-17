@@ -50,7 +50,7 @@ class TreeNode:
         }
 
     def __str_(self) -> str:
-        return f"TreeNode id= {self.id};"
+        return f"TreeNode id= {self.id} with value {self.value};"
 
 
 @dataclass

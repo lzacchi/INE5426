@@ -26,7 +26,7 @@ def check_valid_operation(
             {"left": "int", "right": "int", "result": "int"},
             {"left": "float", "right": "float", "result": "float"},
             {"left": "float", "right": "int", "result": "float"},
-            {"left": "int", "right": "int", "result": "float"},
+            {"left": "int", "right": "float", "result": "float"},
         ],
         "*": [
             {"left": "int", "right": "int", "result": "int"},
@@ -38,7 +38,7 @@ def check_valid_operation(
             {"left": "int", "right": "int", "result": "int"},
             {"left": "float", "right": "float", "result": "float"},
             {"left": "float", "right": "int", "result": "float"},
-            {"left": "int", "right": "int", "result": "float"},
+            {"left": "int", "right": "float", "result": "float"},
         ],
         "%": [
             {"left": "int", "right": "int", "result": "int"},

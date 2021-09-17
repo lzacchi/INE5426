@@ -56,8 +56,7 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
     """
     p[0] = {"scopes": scopes.pop().as_dict(), "expressions": expressions}
     # Stack must be empty otherwise we have a missing scope error
-    print(scopes.is_empty())
-    assert scopes.is_empty()
+    assert scopes.is_empty(), "\n\nUnbalanced scope. Check if you have a missing ';'"
 
 
 def p_FUNCLIST(p: yacc.YaccProduction) -> None:
@@ -231,6 +230,7 @@ def p_ATRIB_RIGHT(p: yacc.YaccProduction) -> None:
     pass
 
 
+# TODO: mudar o nome dessas funções
 def p_funccall_or_exp_plus(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : PLUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
@@ -792,7 +792,8 @@ def create_scope(loop: bool) -> None:
 def get_variable_type(label: str, lineno: int) -> Any:
     """
     Get variable type
-    Used during TreeNode construction in LVALUEs"""
+    Used during TreeNode construction in LVALUEs
+    """
     scope = scopes.seek()
     while True:
         for entry in scope.entry_table:

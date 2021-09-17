@@ -19,8 +19,8 @@
   int base_year;
   base_year = 1990;
 
-  print " defining functions";
-  print " initialazing students";
+  print "defining functions";
+  print "initializing students";
 
   student_name[0] = "Artur";
   student_name[1] = "Lucas V";

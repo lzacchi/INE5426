@@ -91,6 +91,7 @@ class Lexer(Lexer):
     t_RIGHT_SQUARE_BRACKET = r"\]"
 
     t_ignore = " \t"  # updated
+    t_ignore_COMMENTS = r"--.+"  # updated
     t_NULL = r"nil"  # updated
     t_ATTRIBUTION = r"="
     t_STRING_CONSTANT = r'".*"'

@@ -33,7 +33,7 @@ def main(src: str) -> None:
 
     # Prints da entrega 1:
     # print_tokens(token_list)
-    print_symbol_table(token_list)
+    # print_symbol_table(token_list)
     # print_separator()
 
     print("Executing yacc")
@@ -42,7 +42,7 @@ def main(src: str) -> None:
     debug = True  # uncomment for debug mode
     # debug = False
     result = parser.parse(src, debug=debug, lexer=lexer)
-    pprint(result)
+    pprint(result["scopes"])
 
 
 if __name__ == "__main__":
