@@ -11,7 +11,8 @@
             "program": "${workspaceFolder}/src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "test-code/program1.lua"
+                "--src test-code/semantic-analysis/typecheck.lua",
+                "--print-typecheck"
             ]
         }
     ]

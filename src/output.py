@@ -7,14 +7,29 @@
 # Helper functions to output data into terminal
 #
 
+import argparse
 from ply.lex import LexToken
-from typing import List
+from typing import Dict, List
 from pprint import pprint
 from tabulate import tabulate
 from collections import namedtuple
-
 from itertools import groupby
 from operator import itemgetter
+
+
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser.add_argument("--src", dest="src", help="Source file input", type=str)
+    parser.add_argument(
+        "--debug", dest="debug", help="PLY debug mode", action="store_true"
+    )
+    parser.add_argument(
+        "--print-typecheck",
+        dest="print_typecheck",
+        help="Print typecheck operations",
+        action="store_true",
+    )
+    return parser.parse_args()
 
 
 # --- Compiler generated errors ---

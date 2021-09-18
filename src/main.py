@@ -7,10 +7,17 @@
 #
 #
 
+from argparse import Namespace
 import sys
 import ply.yacc as yacc
 from lexer import Lexer
-from output import print_tokens, print_symbol_table, InvalidTokenError, print_separator
+from output import (
+    parse_arguments,
+    print_tokens,
+    print_symbol_table,
+    InvalidTokenError,
+    print_separator,
+)
 from pprint import pprint
 
 # Ply necessary imports
@@ -18,8 +25,8 @@ from lexer import TOKENS as tokens
 from syntax import *
 
 
-def main(src: str) -> None:
-    with open(src) as f:
+def main(args: Namespace) -> None:
+    with open(args.src) as f:
         src = f.read()
 
     lexer = Lexer()
@@ -39,15 +46,11 @@ def main(src: str) -> None:
     print("Executing yacc")
     # TODO: check recursion true or false?
     parser = yacc.yacc(start="PROGRAM", check_recursion=True)
-    debug = True  # uncomment for debug mode
-    # debug = False
-    result = parser.parse(src, debug=debug, lexer=lexer)
-    pprint(result["scopes"])
+    result = parser.parse(src, debug=args.debug, lexer=lexer)
+    if not args.print_typecheck:
+        pprint(result["scopes"])
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python main.py <path/to/source-code>")
-    else:
-        src = sys.argv[1]
-        main(src)
+    args = parse_arguments()
+    main(args)

@@ -30,7 +30,7 @@ install:
 
 
 .PHONY:
-run:
+test:
 	@echo -e "${CCGREEN}Creating output/ directory ${CCEND}"
 	@mkdir -p output/
 
@@ -52,14 +52,23 @@ run:
 
 
 .PHONY:
-test:
+run:
 	@echo -e "${CCGREEN}Creating output/ directory ${CCEND}"
 	@mkdir -p output/
 
-	@echo -e "${CCGREEN}Executing all three programs... ${CCEND}"
+	@echo -e ""
+	@echo -e "${CCYELLOW}--- TYPECHECK TESTS --- ${CCEND}"
+	@echo -e "${CCGREEN}Running test-code/semantic-analysis/valid-operations.lua ${CCEND}"
+	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua has no invalid operations ${CCEND}"
 
-	@echo -e "${CCGREEN}Executing main program1.lua${CCEND}"
-	@poetry run python src/test.py test-code/small.lua > output/small.txt
+	@echo -e ""
+	@echo -e "${CCYELLOW}--- SCOPE IDENTIFIER TESTS --- ${CCEND}"
+	@echo -e ""
+
+	@echo -e ""
+	@echo -e "${CCYELLOW}--- CORRECT 'BREAK' TESTS --- ${CCEND}"
+	@echo -e ""
 
 	@echo -e "${CCGREEN}Done! Execution outputs are located in the output directory.${CCEND}"
 
@@ -70,7 +79,7 @@ example:
 	@echo -e "If you didn't specify a source program"
 	@echo -e "An example file will be used"
 	@echo -e "You can change that by executing ${CCYELLOW}make run src=<path/to/file>${CCEND}"
-	@poetry run python src/main.py ${src}
+	@poetry run python src/main.py --src ${src}
 
 
 .PHONY:

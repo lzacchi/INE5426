@@ -8,6 +8,7 @@ authors = ["Lucas Zacchi <zacchilucasm@gmail.com>"]
 python = "^3.6.9"
 ply = "^3.11"
 tabulate = "^0.8.9"
+argparse = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

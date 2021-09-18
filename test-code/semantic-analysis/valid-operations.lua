@@ -1,3 +1,6 @@
+-- Code to test the correct function of
+-- the typecheck modules
+
 {
     int integer;
     float floating_point;

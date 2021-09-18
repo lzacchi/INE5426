@@ -8,7 +8,7 @@
 
 
 from data import TreeNode
-from output import InvalidBinaryOperation
+from output import InvalidBinaryOperation, parse_arguments
 
 # TODO: fazer enum pra param operation
 def check_valid_operation(
@@ -56,5 +56,9 @@ def check_valid_operation(
     if len(result) == 0:
         raise InvalidBinaryOperation(
             f"\nCan't operate [{left.res_type}] ({left.value}) '{operation}' [{right.res_type}] ({right.value})] at line {lineno}"
+        )
+    if parse_arguments().print_typecheck:
+        print(
+            f"Line {lineno}: [{left.res_type}] ({left.value}) '{operation}' [{right.res_type}] ({right.value})] is a VALID operation"
         )
     return result[0]["result"]
