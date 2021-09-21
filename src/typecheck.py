@@ -10,7 +10,7 @@
 from data import TreeNode
 from output import InvalidBinaryOperation, parse_arguments
 
-# TODO: fazer enum pra param operation
+
 def check_valid_operation(
     left: TreeNode, right: TreeNode, operation: str, lineno: int
 ) -> str:

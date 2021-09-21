@@ -8,13 +8,9 @@
 #
 
 import argparse
-from ply.lex import LexToken
-from typing import Dict, List
+from typing import List
 from pprint import pprint
 from tabulate import tabulate
-from collections import namedtuple
-from itertools import groupby
-from operator import itemgetter
 
 
 def parse_arguments() -> argparse.Namespace:

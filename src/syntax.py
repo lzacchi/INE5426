@@ -10,8 +10,6 @@
 
 import re
 from ply import yacc
-from dataclasses import dataclass
-from collections import namedtuple
 from typing import Any, Dict, List, Tuple
 from output import VariableAlreadyDeclared, InvalidBreakError, VariableNotDeclared
 from lexer import Lexer

@@ -13,10 +13,7 @@ import ply.yacc as yacc
 from lexer import Lexer
 from output import (
     parse_arguments,
-    print_tokens,
-    print_symbol_table,
     InvalidTokenError,
-    print_separator,
 )
 from pprint import pprint
 
