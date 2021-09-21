@@ -34,9 +34,9 @@ class TreeNode:
     ) -> None:
         self.id = uuid.uuid4()
 
+        self.value = value
         self.left = left
         self.right = right
-        self.value = value
         self.res_type = res_type
 
     def as_dict(self) -> Dict:
@@ -44,9 +44,9 @@ class TreeNode:
         right = None if self.right is None else self.right.as_dict()
 
         return {
-            "left": left,
-            "right": right,
             "value": self.value,
+            "right": right,
+            "left": left,
         }
 
     def __str_(self) -> str:

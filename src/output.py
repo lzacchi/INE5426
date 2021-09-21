@@ -59,6 +59,10 @@ class InvalidBinaryOperation(Exception):
     pass
 
 
+class InvalidSyntaxError(Exception):
+    pass
+
+
 # --- Output helper functions ---
 
 

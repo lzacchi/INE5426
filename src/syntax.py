@@ -17,7 +17,7 @@ from output import VariableAlreadyDeclared, InvalidBreakError, VariableNotDeclar
 from lexer import Lexer
 from data import ScopeStack, EntryTable, Scope, TreeNode, DataType
 from typecheck import check_valid_operation
-
+from pprint import pprint
 
 lexer = Lexer()
 lexer.build()
@@ -54,7 +54,8 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
             | NEW_SCOPE FUNCLIST
             | empty
     """
-    p[0] = {"scopes": scopes.pop().as_dict(), "expressions": expressions}
+
+    p[0] = {"scopes": scopes.pop().as_dict(), "expressions": numexpression_as_dict()}
     # Stack must be empty otherwise we have a missing scope error
     assert scopes.is_empty(), "\n\nUnbalanced scope. Check if you have a missing ';'"
 
@@ -803,5 +804,19 @@ def get_variable_type(label: str, lineno: int) -> Any:
         scope = scope.outer_scope
         if scope is None:
             break
-
     raise VariableNotDeclared(f"Variable not declared '{label}' lineno: {lineno})")
+
+
+def numexpression_as_dict() -> List[Dict]:
+    exp_dict = []
+
+    for exp, lineno in expressions:
+        if exp.left == None and exp.right == None:
+            continue
+
+        exp_dict.append(
+            {"Node Id:": str(exp.id), "lineno": lineno, "tree": exp.as_dict()}
+        )
+    pprint(exp_dict)
+
+    return exp_dict

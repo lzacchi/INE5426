@@ -23,6 +23,15 @@ from pprint import pprint
 # Ply necessary imports
 from lexer import TOKENS as tokens
 from syntax import *
+from parser import syntax_lexer
+
+# import logging
+#
+# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+# logger = logging.getLogger()
+
+# Isso limita o traceback para aparecer só o erro criado
+# sys.tracebacklimit = 0
 
 
 def main(args: Namespace) -> None:
@@ -43,12 +52,23 @@ def main(args: Namespace) -> None:
     # print_symbol_table(token_list)
     # print_separator()
 
-    print("Executing yacc")
-    # TODO: check recursion true or false?
-    parser = yacc.yacc(start="PROGRAM", check_recursion=True)
-    result = parser.parse(src, debug=args.debug, lexer=lexer)
-    if not args.print_typecheck:
-        pprint(result["scopes"])
+    try:
+        syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
+        syntax_result = syntax_parser.parse(src, debug=args.debug, lexer=syntax_lexer)
+    except Exception as error:
+        sys.exit(-1)
+
+    print("Análise sintática feita com sucesso! Não houveram erros!")
+
+    ## TODO: check recursion true or false?
+    try:
+        syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
+        result = syntax_parser.parse(src, debug=args.debug, lexer=lexer)
+        # if not args.print_typecheck:
+        #    logger.debug(result["scopes"])
+    except Exception as error:
+        sys.exit(-1)
+    print("Análise semântica feita com sucesso! Não houveram erros!")
 
 
 if __name__ == "__main__":

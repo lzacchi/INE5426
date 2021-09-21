@@ -18,7 +18,7 @@ all: install-poetry install run
 
 .PHONY:
 install-poetry:
-	@echo -e "${CCGREEN}Installing Poetry...${CCEND}"
+	@echo -e "${CCGREEN}Instalando Poetry...${CCEND}"
 	@curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 	@echo -e "${CCGREEN}Done!${CCEND}"
 
@@ -31,24 +31,24 @@ install:
 
 .PHONY:
 test:
-	@echo -e "${CCGREEN}Creating output/ directory ${CCEND}"
+	@echo -e "${CCGREEN}Criando diretorio output/ ${CCEND}"
 	@mkdir -p output/
 
-	@echo -e "${CCGREEN}Executing all three programs... ${CCEND}"
+	@echo -e "${CCGREEN}Executando os tres programas...${CCEND}"
 
-	@echo -e "${CCGREEN}Executing main program1.lua${CCEND}"
-	@poetry run python src/main.py ${program_1} > output/program1.txt
+	@echo -e "${CCGREEN}Executando main program1.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_1} > output/program1.txt
 
-	@echo -e "${CCGREEN}Executing main program2.lua${CCEND}"
-	@poetry run python src/main.py ${program_2} > output/program2.txt
+	@echo -e "${CCGREEN}Executando main program2.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_2} > output/program2.txt
 
-	@echo -e "${CCGREEN}Executing main program3.lua${CCEND}"
-	@poetry run python src/main.py ${program_3} > output/program3.txt
+	@echo -e "${CCGREEN}Executando main program3.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_3} > output/program3.txt
 
-	@echo -e "${CCGREEN}Executing main program4.lua${CCEND}"
-	@poetry run python src/main.py ${program_4} > output/program4.txt
+	@echo -e "${CCGREEN}Executando main program4.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_4} > output/program4.txt
 
-	@echo -e "${CCGREEN}Done! Execution outputs are located in the output directory.${CCEND}"
+	@echo -e "${CCGREEN}Concluido! Outputs de execucao estao salvos no diretorio 'output'.${CCEND}"
 
 
 .PHONY:
@@ -57,39 +57,39 @@ run:
 	@mkdir -p output/
 
 	@echo -e ""
-	@echo -e "${CCYELLOW}--- TYPECHECK TESTS --- ${CCEND}"
-	@echo -e "${CCGREEN}Running test-code/semantic-analysis/valid-operations.lua ${CCEND}"
+	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE TIPOS --- ${CCEND}"
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-operations.lua ${CCEND}"
 	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck
-	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua has no invalid operations ${CCEND}"
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas ${CCEND}"
 
 	@echo -e ""
-	@echo -e "${CCYELLOW}--- SCOPE IDENTIFIER TESTS --- ${CCEND}"
+	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE IDENTIFICADORES POR ESCOPO --- ${CCEND}"
 	@echo -e ""
 
 	@echo -e ""
-	@echo -e "${CCYELLOW}--- CORRECT 'BREAK' TESTS --- ${CCEND}"
+	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE COMANDOS DENTRO DE ESCOPOS --- ${CCEND}"
 	@echo -e ""
 
-	@echo -e "${CCGREEN}Done! Execution outputs are located in the output directory.${CCEND}"
+	@echo -e "${CCGREEN}Concluido! Outputs de execucao foram salvos no diretorio 'output'${CCEND}"
 
 
 .PHONY:
 example:
-	@echo -e "${GREEN}Executing main lexer.py...${CCEND}"
-	@echo -e "If you didn't specify a source program"
-	@echo -e "An example file will be used"
-	@echo -e "You can change that by executing ${CCYELLOW}make run src=<path/to/file>${CCEND}"
+	@echo -e "${GREEN}Executando main lexer.py...${CCEND}"
+	@echo -e "Se voce nao especificou um programa fonte"
+	@echo -e "um arquivo de exemplo sera utilizado."
+	@echo -e "Voce pode muda-lo utilizando o comando ${CCYELLOW}make run src=<path/to/file>${CCEND}"
 	@poetry run python src/main.py --src ${src}
 
 
 .PHONY:
 clean:
-	@echo -e "${CCRED}Cleaning output directory${CCEND}"
+	@echo -e "${CCRED}Limpando diretorio output${CCEND}"
 	@rm -r  -f output/*
 
 
 .PHONY:
 uninstall:
-	@echo -e "${CCRED}Uninstalling Poetry...${CCEND}"
+	@echo -e "${CCRED}Desinstalando Poetry...${CCEND}"
 	@POETRY_UNINSTALL=1 bash -c 'curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python'
-	@echo -e "${CCGREEN}Done!${CCEND}"
+	@echo -e "${CCGREEN}Concluido!${CCEND}"

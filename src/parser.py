@@ -12,15 +12,15 @@ from ply import yacc
 from dataclasses import dataclass
 from collections import namedtuple
 from typing import Any, Dict, List, Tuple
-from output import VariableAlreadyDeclared, InvalidBreakError
+from output import VariableAlreadyDeclared, InvalidBreakError, InvalidSyntaxError
 from lexer import Lexer
 from data import ScopeStack, EntryTable, DataType, Scope, TreeNode
 from typecheck import check_valid_operation
 
 
-lexer = Lexer()
-lexer.build()
-tokens = lexer.tokens
+syntax_lexer = Lexer()
+syntax_lexer.build()
+tokens = syntax_lexer.tokens
 
 # As definicoes abaixo lidam com as producoes da gramatica
 # e foram definidas seguindo o exemplo da documentação do
@@ -432,7 +432,8 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
 
 
 def p_error(p: yacc.YaccProduction) -> None:
-    print(f"Syntax error at token {p}")
+    print(f"Erro sintático no token: {p}")
+    raise InvalidSyntaxError(f"Erro sintático no token: {p}")
 
 
 def p_empty(p: yacc.YaccProduction) -> None:
