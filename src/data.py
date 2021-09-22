@@ -83,17 +83,19 @@ class Scope:
         has_var, lineno = self.contains_var(entry.label)
 
         if has_var:
-            raise VariableInScopeError(lineno)
+            raise VariableInScopeError(
+                f"Variable {entry.label} was already declared at line {lineno}"
+            )
         self.entry_table.append(entry)
 
     def add_inner_scope(self, scope: Any) -> None:
         self.inner_scopes.append(scope)
 
-    def contains_var(self, var_label: str) -> Tuple[bool, int]:
+    def contains_var(self, var_label: str) -> Tuple[bool, Union[int, None]]:
         for entry in self.entry_table:
             if entry.label == var_label:
                 return True, entry.lineno
-        return False, 0
+        return False, None
 
     def as_dict(self) -> Dict:
         return {

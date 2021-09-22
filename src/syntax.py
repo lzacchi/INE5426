@@ -11,7 +11,7 @@
 import re
 from ply import yacc
 from typing import Any, Dict, List, Tuple
-from output import VariableAlreadyDeclared, InvalidBreakError, VariableNotDeclared
+from output import InvalidBreakError, VariableNotDeclared
 from lexer import Lexer
 from data import ScopeStack, EntryTable, Scope, TreeNode, DataType
 from typecheck import check_valid_operation

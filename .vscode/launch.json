@@ -11,8 +11,8 @@
             "program": "${workspaceFolder}/src/main.py",
             "console": "integratedTerminal",
             "args": [
-                "--src test-code/semantic-analysis/typecheck.lua",
-                "--print-typecheck"
+                "--src",
+                "test-code/semantic-analysis/invalid-variable-declaration.lua",
             ]
         }
     ]

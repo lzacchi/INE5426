@@ -1,3 +1,6 @@
+-- Program that calculates the average notes
+-- from an array of students
+
 {
   int n_students;
   n_students = 10;
@@ -10,8 +13,6 @@
 
   float student_test_grade;
   student_test_grade = new float[n_students][n_tests];
-
-  int i;
 
   int birth_year;
   birth_year = new int[n_students];
@@ -34,8 +35,9 @@
   student_name[9] = "Francisco";
 
 
+  int i;
   for (i = 0; i < n_students; i=i+1){
-    print "set birth year";
+    print "set birth year:";
     birth_year[i] = (base_year);
   }
 
@@ -60,7 +62,7 @@
       sum = sum + student_test_grade[i][j];
     }
 
-    print " saving grade";
+    print "saving grade";
     grades[i] = sum/n_tests;
   }
 
@@ -89,7 +91,8 @@
     } else {
       print "Sorry, ";
       print student_name[i];
-      print " :( you are not approved. Try again next year :D";
+      print " :( you are not approved.";
+      print "Try again next year :D";
     }
 
     print "----------------------";

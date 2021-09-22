@@ -62,13 +62,19 @@ run:
 	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck
 	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas ${CCEND}"
 
-	@echo -e ""
-	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE IDENTIFICADORES POR ESCOPO --- ${CCEND}"
-	@echo -e ""
+	@echo -e "${CCYELLOW}Executando os quatro programas de teste...${CCEND}"
 
-	@echo -e ""
-	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE COMANDOS DENTRO DE ESCOPOS --- ${CCEND}"
-	@echo -e ""
+	@echo -e "${CCGREEN}Executando main program1.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_1} > output/program1.txt
+
+	@echo -e "${CCGREEN}Executando main program2.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_2} > output/program2.txt
+
+	@echo -e "${CCGREEN}Executando main program3.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_3} > output/program3.txt
+
+	@echo -e "${CCGREEN}Executando main program4.lua${CCEND}"
+	@poetry run python src/main.py --src ${program_4} > output/program4.txt
 
 	@echo -e "${CCGREEN}Concluido! Outputs de execucao foram salvos no diretorio 'output'${CCEND}"
 
@@ -79,6 +85,8 @@ example:
 	@echo -e "Se voce nao especificou um programa fonte"
 	@echo -e "um arquivo de exemplo sera utilizado."
 	@echo -e "Voce pode muda-lo utilizando o comando ${CCYELLOW}make run src=<path/to/file>${CCEND}"
+
+	@echo -e "${CCYELLOW}Executando o arquivo de exemplo...${CCEND}"
 	@poetry run python src/main.py --src ${src}
 
 
