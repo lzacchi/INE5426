@@ -86,7 +86,7 @@ def p_FUNCDEF(p: yacc.YaccProduction) -> None:
     func_line_number = p.lineno(2)
 
     new_func = EntryTable(
-        label=func_label, datatype=DataType["func"], values=[], lineno=func_line_number
+        label=func_label, datatype="FUNCTION", values=[], lineno=func_line_number
     )
 
     # Add function to current scope entry table
@@ -172,7 +172,7 @@ def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
             current_scope = current_scope.outer_scope
 
             # If there is no outer scope then it's an error
-            if current_scope is not None:
+            if current_scope is None:
                 # Get error line number and raise an error
                 error_lineno = p.lineno(2)
                 raise InvalidBreakError(
@@ -454,7 +454,8 @@ def p_OPTIONAL_ELSE(p: yacc.YaccProduction) -> None:
     OPTIONAL_ELSE : ELSE NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
                   | empty
     """
-    if len(p) > 2:
+    empty = len(p) < 5
+    if empty:
         scopes.pop()
     pass
 
@@ -494,7 +495,8 @@ def p_OPTIONAL_ALLOC_NUMEXPRESSION(p: yacc.YaccProduction) -> None:
     OPTIONAL_ALLOC_NUMEXPRESSION : LEFT_SQUARE_BRACKET NUMEXPRESSION RIGHT_SQUARE_BRACKET OPTIONAL_ALLOC_NUMEXPRESSION
                                  | empty
     """
-    if len(p) < 3:
+    empty = len(p) < 3
+    if empty:
         p[0] = ""
     else:
         numexpr = p[2]

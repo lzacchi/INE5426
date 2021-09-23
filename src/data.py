@@ -56,7 +56,7 @@ class TreeNode:
 @dataclass
 class EntryTable:
     label: str
-    datatype: DataType
+    datatype: str
     values: List[int]
     lineno: int
 

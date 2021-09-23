@@ -125,7 +125,7 @@ class Lexer(Lexer):
     def t_error(self, t: LexToken) -> None:
         # Simulating a Lua error message
         raise InvalidTokenError(
-            f"Input file({t.lineno}:{self.find_column(t)}) '{t.value[0]}' is an invalid character"
+            f"Caractere inválido (linha: {t.lineno}| coluna: {self.find_column(t)}) '{t.value[0]}'"
         )
 
     def build(self, **kwargs: Any) -> None:

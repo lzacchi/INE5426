@@ -1,14 +1,14 @@
--- Código de demonstração da verificação de tipos por escopo
+-- Código de demonstração da verificação de declarações de variáveis por escopo
 
 {
     if (1 < 2) {
-        print "declaração de variavel ok";
+        print "OK - declaração de variavel dentro de escopo";
         int i;
         i = 3;
     }
-    print "declaração de variavel ok";
+    print "OK - declaração de variavel em escopo global";
     int i;
-    print "erro de declaração de variável!";
+    print "ERRO - declaração de variável em mesmo escopo com mesmo nome";
     string i;
     i = "error!";
 }

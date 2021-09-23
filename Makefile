@@ -58,11 +58,24 @@ run:
 
 	@echo -e ""
 	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE TIPOS --- ${CCEND}"
-	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-operations.lua ${CCEND}"
-	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck
-	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas ${CCEND}"
 
-	@echo -e "${CCYELLOW}Executando os quatro programas de teste...${CCEND}"
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-operations.lua ${CCEND}"
+	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck > output/operations.txt
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas. Output salva em output/operations.txt${CCEND}"
+
+	@echo -e "${CCYELLOW}--- TESTES DE DECLARAÇÂO DE VARIAVEIS POR ESCOPO --- ${CCEND}"
+
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-variable-declaration.lua ${CCEND}"
+	@poetry run python src/main.py --src test-code/semantic-analysis/valid-variable-declaration.lua > output/variable-declaration.txt
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-variable-declaration.lua executado com sucesso. Output salva em output/variable-declaration.txt${CCEND}"
+
+	@echo -e "${CCYELLOW}--- TESTES DE ESCOPO DE OPERADOR 'BREAK' --- ${CCEND}"
+
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-break-operator.lua ${CCEND}"
+	@poetry run python src/main.py --src test-code/semantic-analysis/valid-break-operator.lua > output/break-operator.txt
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-break-operator.lua nao possui operadores 'break' invalidos. Output salva em output/break-operator.txt ${CCEND}"
+
+	@echo -e "${CCYELLOW}--- EXECUTANDO PROGRAMAS DE TESTE --- ${CCEND}"
 
 	@echo -e "${CCGREEN}Executando main program1.lua${CCEND}"
 	@poetry run python src/main.py --src ${program_1} > output/program1.txt
@@ -88,6 +101,11 @@ example:
 
 	@echo -e "${CCYELLOW}Executando o arquivo de exemplo...${CCEND}"
 	@poetry run python src/main.py --src ${src}
+
+.PHONY:
+example-debug:
+	@echo -e "${CCYELLOW}Executando o arquivo de exemplo...${CCEND}"
+	@poetry run python src/main.py --src ${src} --debug
 
 
 .PHONY:

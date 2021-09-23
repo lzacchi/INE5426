@@ -41,7 +41,8 @@ def main(args: Namespace) -> None:
 
     try:
         token_list = lexer.token_list()
-    except InvalidTokenError as err:
+    except Exception as err:
+        print(f"Erro na etapa de tokenização {err}")
         sys.exit(-1)
 
     # Prints da entrega 1:
