@@ -1,15 +1,14 @@
+-- Código de demonstração da verificação de tipos por escopo
+
 {
     if (1 < 2) {
-        print "variable declaration ok";
+        print "declaração de variavel ok";
         int i;
         i = 3;
     }
-
-    print "variable declaration ok";
+    print "declaração de variavel ok";
     int i;
-    if (2 < 3) {
-        print "variable declaration error!";
-        string i;
-        i = "error!";
-    }
+    print "erro de declaração de variável!";
+    string i;
+    i = "error!";
 }

@@ -1,14 +1,12 @@
--- Code to test the correct function of
--- the typecheck modules.
---
--- The compiler should crash on the first invalid operations that is uncommented.
+-- Código de exemplo de erro do módulo typecheck.py
 
 {
     int integer;
     float floating_point;
     string str;
 
-    -- compiler stops on first error, uncomment only one line to test
+    -- Existem vários tipos de operações inválidas nas linhas abaixo.
+    -- O compilador deve parar com uma mensagem de erro na primeira linha descomentada baixo
     str = str % floating_point;
     -- str = str / str
     -- floating_point = str * integer;

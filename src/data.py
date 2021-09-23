@@ -84,7 +84,7 @@ class Scope:
 
         if has_var:
             raise VariableInScopeError(
-                f"Variable {entry.label} was already declared at line {lineno}"
+                f"Variável {entry.label} na linha {entry.lineno} já foi declarada na linha {lineno}"
             )
         self.entry_table.append(entry)
 

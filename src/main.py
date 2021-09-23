@@ -53,6 +53,7 @@ def main(args: Namespace) -> None:
         syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
         syntax_result = syntax_parser.parse(src, debug=args.debug, lexer=syntax_lexer)
     except Exception as error:
+        print(f"Erro na etapa de análise sintática: {error}")
         sys.exit(-1)
 
     print("Análise sintática feita com sucesso! Não houveram erros!")
@@ -64,6 +65,7 @@ def main(args: Namespace) -> None:
         # if not args.print_typecheck:
         #    logger.debug(result["scopes"])
     except Exception as error:
+        print(f"Erro na etapa de análise semântica: {error}")
         sys.exit(-1)
     print("Análise semântica feita com sucesso! Não houveram erros!")
 

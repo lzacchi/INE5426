@@ -42,7 +42,8 @@ scopes = ScopeStack()
 # para poder fazer a lógica de escopos.
 #
 # Referência: https://www.dabeaz.com/ply/ply.html#ply_nn24
-
+#
+#
 # --- Yacc rules ---
 
 
@@ -180,7 +181,9 @@ def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
             if current_scope is not None:
                 # Get error line number and raise an error
                 error_lineno = p.lineno(2)
-                raise InvalidBreakError(error_lineno)
+                raise InvalidBreakError(
+                    f"Operador 'break' inválido na linha {error_lineno}"
+                )
 
 
 def p_VARDECL(p: yacc.YaccProduction) -> None:
