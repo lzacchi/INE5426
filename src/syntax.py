@@ -78,7 +78,6 @@ def p_FUNCDEF(p: yacc.YaccProduction) -> None:
     """
     FUNCDEF : FUNCTION_DECLARATION LABEL NEW_SCOPE LEFT_PARENTHESIS PARAMLIST RIGHT_PARENTHESIS LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
-    # TODO DONE CONFERIR:
     scopes.pop()
     current_scope = scopes.seek()
 
@@ -156,7 +155,6 @@ def p_STATELIST_STATEMENT(p: yacc.YaccProduction) -> None:
     """
     STATELIST_STATEMENT : NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
     """
-    # TODO CONFERIR:
     scopes.pop()
     pass
 
@@ -165,14 +163,10 @@ def p_BREAK_STATEMENT(p: yacc.YaccProduction) -> None:
     """
     BREAK_STATEMENT : BREAK SEMICOLON
     """
-    # TODO:
-    # handle scope break and check if there is a loop
     current_scope = scopes.seek()
 
     while True:
-        if current_scope is None:
-            break
-        elif current_scope.loop:
+        if current_scope is None or current_scope.loop:
             break
         else:
             current_scope = current_scope.outer_scope
@@ -190,8 +184,6 @@ def p_VARDECL(p: yacc.YaccProduction) -> None:
     """
     VARDECL : DATATYPE LABEL OPTIONAL_VECTOR
     """
-    # TODO:
-    # Variable info
     variable_type = p[1]
     variable_label = p[2]
     variable_values = p[3]
@@ -232,8 +224,7 @@ def p_ATRIB_RIGHT(p: yacc.YaccProduction) -> None:
     pass
 
 
-# TODO: mudar o nome dessas funções
-def p_funccall_or_exp_plus(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_PLUS(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : PLUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
                            | MINUS FACTOR RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
@@ -257,7 +248,7 @@ def p_funccall_or_exp_plus(p: yacc.YaccProduction) -> None:
     expressions.append(right_node)
 
 
-def p_funccal_or_exp_int_const(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_INTEGER_CONSTANT(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : INTEGER_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
@@ -280,7 +271,7 @@ def p_funccal_or_exp_int_const(p: yacc.YaccProduction) -> None:
     expressions.append((node, p.lineno(2)))
 
 
-def p_funccal_or_exp_float_const(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_FLOATING_POINT_CONSTANT(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : FLOATING_POINT_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
@@ -303,7 +294,7 @@ def p_funccal_or_exp_float_const(p: yacc.YaccProduction) -> None:
     expressions.append((node, p.lineno(2)))
 
 
-def p_funccal_or_exp_string_const(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_STRING_CONSTANT(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : STRING_CONSTANT RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
@@ -326,14 +317,14 @@ def p_funccal_or_exp_string_const(p: yacc.YaccProduction) -> None:
     expressions.append((node, p.lineno(1)))
 
 
-def p_funccall_or_exp_null(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_NULL(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : NULL RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
     pass
 
 
-def p_funccall_or_exp_parentesis(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_LEFT_PARENTHESIS(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : LEFT_PARENTHESIS NUMEXPRESSION RIGHT_PARENTHESIS RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
@@ -356,7 +347,7 @@ def p_funccall_or_exp_parentesis(p: yacc.YaccProduction) -> None:
     expressions.append((node, p.lineno(1)))
 
 
-def p_funccall_or_exp_ident(p: yacc.YaccProduction) -> None:
+def p_EXPRESSION_OR_FUNCCALL_LABEL(p: yacc.YaccProduction) -> None:
     """
     EXPRESSION_OR_FUNCCALL : LABEL FOLLOW_LABEL
     """
@@ -375,7 +366,7 @@ def p_funccall_or_exp_ident(p: yacc.YaccProduction) -> None:
         expressions.append((node, p.lineno(1)))
 
 
-def p_follow_ident_alloc(p: yacc.YaccProduction) -> None:
+def p_FOLLOW_LABEL_ALLOC(p: yacc.YaccProduction) -> None:
     """
     FOLLOW_LABEL : OPTIONAL_ALLOC_NUMEXPRESSION RECURSIVE_UNARYEXPR RECURSIVE_MINUS_OR_PLUS OPTIONAL_REL_OP_NUMEXPRESSION
     """
@@ -412,14 +403,6 @@ def p_ATRIBSTAT(p: yacc.YaccProduction) -> None:
     ATRIBSTAT : LVALUE ATTRIBUTION ATRIB_RIGHT
     """
     pass
-
-
-# TODO: remove this?
-# def p_FUNCCALL(p: yacc.YaccProduction) -> None:
-#     """
-#     FUNCCALL : LABEL LEFT_PARENTHESIS PARAMLISTCALL RIGHT_PARENTHESIS
-#     """
-#     pass
 
 
 def p_PARAMLISTCALL(p: yacc.YaccProduction) -> None:
@@ -471,7 +454,6 @@ def p_OPTIONAL_ELSE(p: yacc.YaccProduction) -> None:
     OPTIONAL_ELSE : ELSE NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
                   | empty
     """
-    # TODO CONFERIR:
     if len(p) > 2:
         scopes.pop()
     pass

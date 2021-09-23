@@ -58,12 +58,9 @@ def main(args: Namespace) -> None:
 
     print("Análise sintática feita com sucesso! Não houveram erros!")
 
-    ## TODO: check recursion true or false?
     try:
         syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
         result = syntax_parser.parse(src, debug=args.debug, lexer=lexer)
-        # if not args.print_typecheck:
-        #    logger.debug(result["scopes"])
     except Exception as error:
         print(f"Erro na etapa de análise semântica: {error}")
         sys.exit(-1)
