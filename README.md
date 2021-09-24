@@ -20,3 +20,6 @@ Relatórios e outras documentações estão na pasta `pdf`
 
 ## Exemplos
 Diversos exemplos da linguagem estão na pasta `test-code`, cada pasta procura reunir exemplos para mostrar diversas partes do compilador funcionando ou dando erro como esperado.
+
+Existem exemplos propositalmente errados para demonstrar a detecção de erros do compilador. E estes podem ser executados das seguintes formas:
+- `make example src=test-code/semantic-analysis/invalid-variable-declaration.lua`
