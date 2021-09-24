@@ -20,14 +20,13 @@ all: install-poetry install run
 install-poetry:
 	@echo -e "${CCGREEN}Instalando Poetry...${CCEND}"
 	@curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
-	@echo -e "${CCGREEN}Done!${CCEND}"
-	@source $HOME/.poetry/env
+	@echo -e "${CCGREEN}Feito!${CCEND}"
 
 .PHONY:
 install:
-	@echo -e "${CCGREEN}Installing dependencies through Poetry...${CCEND}"
+	@echo -e "${CCGREEN}Instalando dependências pelo poetry...${CCEND}"
 	@poetry install
-	@echo -e "${CCGREEN}Done!${CCEND}"
+	@echo -e "${CCGREEN}Feito!${CCEND}"
 
 
 .PHONY:
@@ -54,7 +53,7 @@ test:
 
 .PHONY:
 run:
-	@echo -e "${CCGREEN}Creating output/ directory ${CCEND}"
+	@echo -e "${CCGREEN}Criando pasta output/ ${CCEND}"
 	@mkdir -p output/
 
 	@echo -e ""
