@@ -11,7 +11,7 @@ from argparse import Namespace
 import sys
 import ply.yacc as yacc
 from lexer import Lexer
-from output import parse_arguments, print_separator, print_symbol_table
+from output import parse_arguments, print_separator
 from pprint import pprint
 
 # Ply necessary imports
@@ -39,8 +39,7 @@ def main(args: Namespace) -> None:
 
     # Prints da entrega 1:
     # print_tokens(token_list)
-
-    print_symbol_table(token_list)
+    # print_symbol_table(token_list)
     print_separator()
 
     try:
