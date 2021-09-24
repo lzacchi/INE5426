@@ -1,7 +1,15 @@
 -- Program that calculates the average notes
 -- from an array of students
 
-def main() {
+
+def print_congrulatory_message(int grade, int i) {
+  print "Congratulations, ";
+  print ". You are approved!";
+  return;
+}
+
+
+def average_notes_calculator() {
   int n_students;
   n_students = 10;
 
@@ -67,14 +75,13 @@ def main() {
   }
 
   print "Done!";
-
   print "Printing all students grades:";
 
-  for (i = 0; i < n_students; i = i + 1){
+  for (i = 0; i < n_students; i = i + 1) {
     print "------------------------";
     print "STUDENT: " ;
     print  student_name[i];
-    for (j = 0; j < n_tests; j = j + 1){
+    for (j = 0; j < n_tests; j = j + 1) {
       print "Test ";
       print j;
       print " score: ";
@@ -84,19 +91,17 @@ def main() {
     print "Grade: ";
     print grades[i];
 
-    if (grades[i] >= 6){
-      print "Congratulations, ";
-      print student_name[i];
-      print ". You are approved!";
-    } else {
-      print "Sorry, ";
-      print student_name[i];
-      print " :( you are not approved.";
-      print "Try again next year :D";
-    }
-
     print "----------------------";
   }
+
+  print "Print approved students";
+  for (i = 0; i < n_students; i = i + 1) {
+    int student_grade;
+    student_grade = n_students[i];
+    string msg;
+    msg = print_congrulatory_message(student_grade, i);
+  }
+
   print "Ending program...";
   return;
 }

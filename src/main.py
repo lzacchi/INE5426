@@ -22,11 +22,6 @@ from lexer import TOKENS as tokens
 from syntax import *
 from parser import syntax_lexer
 
-# import logging
-#
-# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-# logger = logging.getLogger()
-
 # Isso limita o traceback para aparecer só o erro criado
 # sys.tracebacklimit = 0
 
@@ -43,7 +38,7 @@ def main(args: Namespace) -> None:
         token_list = lexer.token_list()
     except Exception as err:
         print(f"Erro na etapa de tokenização {err}")
-        sys.exit(-1)
+        # sys.exit(-1)
 
     # Prints da entrega 1:
     # print_tokens(token_list)
@@ -51,11 +46,11 @@ def main(args: Namespace) -> None:
     # print_separator()
 
     try:
-        syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
-        syntax_result = syntax_parser.parse(src, debug=args.debug, lexer=syntax_lexer)
+        # syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
+        syntax_result = yacc.yacc().parse(src, debug=args.debug, lexer=syntax_lexer)
     except Exception as error:
         print(f"Erro na etapa de análise sintática: {error}")
-        sys.exit(-1)
+        # sys.exit(-1)
 
     print("Análise sintática feita com sucesso! Não houveram erros!")
 
@@ -67,7 +62,7 @@ def main(args: Namespace) -> None:
         pprint(result)
     except Exception as error:
         print(f"Erro na etapa de análise semântica: {error}")
-        sys.exit(-1)
+        # sys.exit(-1)
     print("Análise semântica feita com sucesso! Não houveram erros!")
 
 

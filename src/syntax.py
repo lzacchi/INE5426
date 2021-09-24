@@ -453,7 +453,7 @@ def p_OPTIONAL_ELSE(p: yacc.YaccProduction) -> None:
     OPTIONAL_ELSE : ELSE NEW_SCOPE LEFT_BRACKET STATELIST RIGHT_BRACKET
                   | empty
     """
-    empty = len(p) < 5
+    empty = len(p) > 2
     if empty:
         scopes.pop()
     pass
@@ -788,7 +788,7 @@ def get_variable_type(label: str, lineno: int) -> Any:
         scope = scope.outer_scope
         if scope is None:
             break
-    raise VariableNotDeclared(f"Variable not declared '{label}' lineno: {lineno})")
+    raise VariableNotDeclared(f"Variável não declarada '{label}' na linha: {lineno})")
 
 
 def numexpression_as_dict() -> List[Dict]:
