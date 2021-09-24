@@ -21,6 +21,7 @@ install-poetry:
 	@echo -e "${CCGREEN}Instalando Poetry...${CCEND}"
 	@curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 	@echo -e "${CCGREEN}Feito!${CCEND}"
+	@source ~/.poetry/env
 
 .PHONY:
 install:
