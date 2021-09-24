@@ -13,7 +13,7 @@ import ply.yacc as yacc
 from lexer import Lexer
 from output import (
     parse_arguments,
-    InvalidTokenError,
+    print_separator,
 )
 from pprint import pprint
 
@@ -62,6 +62,9 @@ def main(args: Namespace) -> None:
     try:
         syntax_parser = yacc.yacc(start="PROGRAM", check_recursion=True)
         result = syntax_parser.parse(src, debug=args.debug, lexer=lexer)
+        print_separator()
+        print("Syntax parser result:\n")
+        pprint(result)
     except Exception as error:
         print(f"Erro na etapa de análise semântica: {error}")
         sys.exit(-1)

@@ -10,7 +10,7 @@
 string theater_name;
 int max_seats;
 
-int free_seats_counter; 
+int free_seats_counter;
 int max_seats_counter; -- max seats in theater
 string reserved_seats; -- matrix of seats that are 'free' or has person id that reserved it
 string suggestion_list;
@@ -27,8 +27,8 @@ def initialize_theater_system(int n_seats, string name){
     -- initalize seats
     int i;
     int j;
-    for (i=0; i<max_seats;i = i + 1){
-        for (j=0; j<max_seats;j = j + 1){
+    for (i = 0 i<max_seats;i = i + 1){
+        for (j = 0; j<max_seats;j = j + 1){
             reserved_seats[i][j] = "free";
         }
     }
@@ -41,7 +41,7 @@ def theater_status(){
     print("Total seats: "+theater_name);
     print("Number of free seats: "+free_seats_counter);
     print("Number of occupied seats: "+reserved_seats);
-    return; 
+    return;
 }
 
 def suggest_another_seat(int i, int j){
@@ -71,7 +71,7 @@ def suggest_another_seat(int i, int j){
         suggestion_list[3] = i +","+j;
         }
     }
-    
+
     int k;
     print("Here are some free seats suggestions near from that one:")
     for (k=0; k < 4; k = k + 1){

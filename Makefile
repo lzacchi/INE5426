@@ -59,21 +59,21 @@ run:
 	@echo -e ""
 	@echo -e "${CCYELLOW}--- TESTES DE VERIFICACAO DE TIPOS --- ${CCEND}"
 
-	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-operations.lua ${CCEND}"
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-operations.lua com output salva em output/operations.txt${CCEND}"
 	@poetry run python src/main.py --src test-code/semantic-analysis/valid-operations.lua --print-typecheck > output/operations.txt
-	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas. Output salva em output/operations.txt${CCEND}"
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-operations.lua nao possui operacoes invalidas.${CCEND}"
 
 	@echo -e "${CCYELLOW}--- TESTES DE DECLARAÇÂO DE VARIAVEIS POR ESCOPO --- ${CCEND}"
 
-	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-variable-declaration.lua ${CCEND}"
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-variable-declaration.lua com output salva em output/variable-declaration.txt${CCEND}"
 	@poetry run python src/main.py --src test-code/semantic-analysis/valid-variable-declaration.lua > output/variable-declaration.txt
-	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-variable-declaration.lua executado com sucesso. Output salva em output/variable-declaration.txt${CCEND}"
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-variable-declaration.lua possui declarações de variáveis por escopo válidas.${CCEND}"
 
 	@echo -e "${CCYELLOW}--- TESTES DE ESCOPO DE OPERADOR 'BREAK' --- ${CCEND}"
 
-	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-break-operator.lua ${CCEND}"
+	@echo -e "${CCGREEN}Executando test-code/semantic-analysis/valid-break-operator.lua com output salva em output/break-operator.txt${CCEND}"
 	@poetry run python src/main.py --src test-code/semantic-analysis/valid-break-operator.lua > output/break-operator.txt
-	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-break-operator.lua nao possui operadores 'break' invalidos. Output salva em output/break-operator.txt ${CCEND}"
+	@echo -e "${CCGREEN}test-code/semantic-analysis/valid-break-operator.lua nao possui operadores 'break' invalidos.${CCEND}"
 
 	@echo -e "${CCYELLOW}--- EXECUTANDO PROGRAMAS DE TESTE --- ${CCEND}"
 

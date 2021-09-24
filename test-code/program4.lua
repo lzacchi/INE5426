@@ -20,7 +20,7 @@ int tests = 1;
 -- Calculate the base to the exponent power, as in base^exponent
 def pow(float base, int exponent, float retval){
   retval = 1;
-  for (i=0; i < exponent; i++){
+  for (i = 0 i < exponent; i++){
     retval = retval * base;
   }
   print("Result:");
@@ -32,7 +32,7 @@ def pow(float base, int exponent, float retval){
 -- Calculate euler_constant^exponent
 def exp(int exponent, float retval){
   retval = 1;
-  for (i=0; i < exponent; i++){
+  for (i = 0 i < exponent; i++){
     retval = retval * euler_constant;
   }
   print("Result:");

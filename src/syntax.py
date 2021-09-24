@@ -8,12 +8,11 @@
 # Arquivo utilizado para análise sintática e
 # análise semântica do código
 
-import re
 from ply import yacc
 from typing import Any, Dict, List, Tuple
-from output import InvalidBreakError, VariableNotDeclared
+from output import InvalidBreakError, InvalidSyntaxError, VariableNotDeclared
 from lexer import Lexer
-from data import ScopeStack, EntryTable, Scope, TreeNode, DataType
+from data import ScopeStack, EntryTable, Scope, TreeNode
 from typecheck import check_valid_operation
 from pprint import pprint
 
@@ -53,10 +52,11 @@ def p_PROGRAM(p: yacc.YaccProduction) -> None:
             | NEW_SCOPE FUNCLIST
             | empty
     """
-
     p[0] = {"scopes": scopes.pop().as_dict(), "expressions": numexpression_as_dict()}
     # Stack must be empty otherwise we have a missing scope error
-    assert scopes.is_empty(), "\n\nUnbalanced scope. Check if you have a missing ';'"
+    assert (
+        scopes.is_empty()
+    ), "Erro de escopo, verifique se faltam ';' ou 'return;' nas funções"
 
 
 def p_FUNCLIST(p: yacc.YaccProduction) -> None:
@@ -92,7 +92,6 @@ def p_FUNCDEF(p: yacc.YaccProduction) -> None:
     # Add function to current scope entry table
     if current_scope is not None:
         current_scope.add_entry(new_func)
-    pass
 
 
 def p_DATATYPE(p: yacc.YaccProduction) -> None:
@@ -739,7 +738,7 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
 
 
 def p_error(p: yacc.YaccProduction) -> None:
-    print(f"Syntax error at token {p}")
+    raise InvalidSyntaxError(f"Syntax error at token {p}")
 
 
 def p_empty(p: yacc.YaccProduction) -> None:

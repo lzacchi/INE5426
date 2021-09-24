@@ -1,7 +1,7 @@
 -- Código de exemplo para demonstrar o funcionamento
 -- do módulo typecheck.py
 
-{
+def main() {
     int integer;
     float floating_point;
     string str;

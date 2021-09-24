@@ -87,4 +87,4 @@ def print_symbol_table(tokens: List) -> None:
 
 
 def print_separator() -> None:
-    print("===========================")
+    print("\n===========================\n")

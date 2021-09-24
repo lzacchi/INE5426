@@ -32,7 +32,7 @@ def erase_index(int index){
 }
 
 int j;
-for (j=0; j < max_length; j = j + 1){
+for (j = 0; j < max_length; j = j + 1){
     erase_index(j);
 }
 

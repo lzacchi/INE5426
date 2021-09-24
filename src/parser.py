@@ -6,16 +6,11 @@
 #          Lucas Zacchi
 #
 # Arquivo utilizado para análise sintática
+#
 
-import re
 from ply import yacc
-from dataclasses import dataclass
-from collections import namedtuple
-from typing import Any, Dict, List, Tuple
-from output import VariableAlreadyDeclared, InvalidBreakError, InvalidSyntaxError
+from output import InvalidSyntaxError
 from lexer import Lexer
-from data import ScopeStack, EntryTable, DataType, Scope, TreeNode
-from typecheck import check_valid_operation
 
 
 syntax_lexer = Lexer()
@@ -348,7 +343,6 @@ def p_TERM(p: yacc.YaccProduction) -> None:
     pass
 
 
-# Tuple(operator, term)
 def p_RECURSIVE_UNARYEXPR(p: yacc.YaccProduction) -> None:
     """
     RECURSIVE_UNARYEXPR : UNARYEXPR_OPERATOR TERM
@@ -433,7 +427,6 @@ def p_LVALUE(p: yacc.YaccProduction) -> None:
 
 
 def p_error(p: yacc.YaccProduction) -> None:
-    print(f"Erro sintático no token: {p}")
     raise InvalidSyntaxError(f"Erro sintático no token: {p}")
 
 

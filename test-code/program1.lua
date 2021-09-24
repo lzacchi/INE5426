@@ -1,7 +1,7 @@
 -- Program that calculates the average notes
 -- from an array of students
 
-{
+def main() {
   int n_students;
   n_students = 10;
 
@@ -36,15 +36,15 @@
 
 
   int i;
-  for (i = 0; i < n_students; i=i+1){
+  for (i = 0; i < n_students; i = i + 1){
     print "set birth year:";
     birth_year[i] = (base_year);
   }
 
   print "set random tests scores";
   int j;
-  for (i=0; i < n_students; i=i+1){
-    for (j=0; j < n_tests; j=j+1){
+  for (i = 0; i < n_students; i = i + 1){
+    for (j = 0; j < n_tests; j = j + 1){
       student_test_grade[i][j] = (n_tests * 6);
     }
 
@@ -55,10 +55,10 @@
   float grades;
   grades = new float[n_students];
 
-  for (i=0; i < n_students; i=i+1){
+  for (i = 0; i < n_students; i = i + 1){
     float sum;
     sum = 0;
-    for (j=0; j < n_tests; j=j+1){
+    for (j = 0; j < n_tests; j = j + 1){
       sum = sum + student_test_grade[i][j];
     }
 
@@ -70,11 +70,11 @@
 
   print "Printing all students grades:";
 
-  for (i=0; i < n_students; i=i+1){
+  for (i = 0; i < n_students; i = i + 1){
     print "------------------------";
     print "STUDENT: " ;
     print  student_name[i];
-    for (j=0; j < n_tests; j=j+1){
+    for (j = 0; j < n_tests; j = j + 1){
       print "Test ";
       print j;
       print " score: ";
