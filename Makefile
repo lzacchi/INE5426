@@ -118,5 +118,5 @@ clean:
 .PHONY:
 uninstall:
 	@echo -e "${CCRED}Desinstalando Poetry...${CCEND}"
-	@POETRY_UNINSTALL=1 bash -c 'curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python'
+	@POETRY_UNINSTALL=1 bash -c 'curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python3'
 	@echo -e "${CCGREEN}Concluido!${CCEND}"
